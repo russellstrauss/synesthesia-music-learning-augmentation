@@ -21,7 +21,7 @@
 
 			<div class="form-group">
 				<h3>
-					<label for="fullName">Full Name</label>
+					<label for="fullName" chord="F">Full Name</label>
 				</h3>
 				<input type="text" id="fullName" placeholder="Full Name" name="fullName">
 			</div>
@@ -65,59 +65,59 @@
 
 			<div class="pagination">
 				<button class="prev left">Prev</button>
-				<button class="next right">Next</button>
+				<button class="next right">Begin</button>
 			</div>
 		</div>
 
-		<div class="step assess-video">
+		<div class="step assess-video Am">
 			<video controls>
 				<source src="assets/video/Am.m4v" type="video/mp4"> Your browser does not support the video tag.
 			</video>
 
 			<div class="pagination">
-				<button class="chord" correct="true">Am</button>
-				<button class="chord" correct="false">C</button>
-				<button class="chord" correct="false">F</button>
-				<button class="chord" correct="false">G</button>
+				<button class="chord" correct="true" chord="Am">Am</button>
+				<button class="chord" correct="false" chord="C">C</button>
+				<button class="chord" correct="false" chord="F">F</button>
+				<button class="chord" correct="false" chord="G">G</button>
 			</div>
 		</div>
 
-		<div class="step assess-video">
+		<div class="step assess-video C">
 			<video controls>
 				<source src="assets/video/C.m4v" type="video/mp4"> Your browser does not support the video tag.
 			</video>
 
 			<div class="pagination">
-				<button class="chord" correct="false">Am</button>
-				<button class="chord" correct="true">C</button>
-				<button class="chord" correct="false">F</button>
-				<button class="chord" correct="false">G</button>
+				<button class="chord" correct="false" chord="Am">Am</button>
+				<button class="chord" correct="true" chord="C">C</button>
+				<button class="chord" correct="false" chord="F">F</button>
+				<button class="chord" correct="false" chord="G">G</button>
 			</div>
 		</div>
 
-		<div class="step assess-video">
+		<div class="step assess-video F">
 			<video controls>
 				<source src="assets/video/F.m4v" type="video/mp4"> Your browser does not support the video tag.
 			</video>
 
 			<div class="pagination">
-				<button class="chord" correct="false">Am</button>
-				<button class="chord" correct="false">C</button>
-				<button class="chord" correct="true">F</button>
-				<button class="chord" correct="false">G</button>
+				<button class="chord" correct="false" chord="Am">Am</button>
+				<button class="chord" correct="false" chord="C">C</button>
+				<button class="chord" correct="true" chord="F">F</button>
+				<button class="chord" correct="false" chord="G">G</button>
 			</div>
 		</div>
 
-		<div class="step assess-video">
+		<div class="step assess-video G">
 			<video controls>
 				<source src="assets/video/G.m4v" type="video/mp4"> Your browser does not support the video tag.
 			</video>
 
 			<div class="pagination">
-				<button class="chord" correct="false">Am</button>
-				<button class="chord" correct="false">C</button>
-				<button class="chord" correct="false">F</button>
-				<button class="chord" correct="true">G</button>
+				<button class="chord" correct="false" chord="Am">Am</button>
+				<button class="chord" correct="false" chord="C">C</button>
+				<button class="chord" correct="false" chord="F">F</button>
+				<button class="chord" correct="true" chord="G">G</button>
 			</div>
 		</div>
 		
@@ -129,12 +129,12 @@
 			<table class="results"></table>
 			
 			<div class="pagination">
-				<button class="center">Download Results</button>
+				<button id="download" class="center">Download Results</button>
 			</div>
 		</div>
 	</div>
 
-	<!-- <script src="assets/vendors/js/vendors.js"></script> -->
+	<script src="assets/vendors/js/vendors.js"></script>
 	<script src="assets/js/bundle.js"></script>
 </body>
 

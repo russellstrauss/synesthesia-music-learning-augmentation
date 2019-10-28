@@ -1,3 +1,5 @@
+var FileSaver = require('file-saver');
+
 module.exports = function() {
 	
 	var assessmentResults = [];
@@ -5,12 +7,7 @@ module.exports = function() {
 	var selectedVideo;
 	var musicExperience = 'false';
 	var name;
-	
-	// setTimeout(function() {
-		
-	// 	var endTime = new Date().getTime();
-	// 	console.log(endTime - startTime);
-	// }, 2000);
+	var noteTested;
 	
 	return {
 		
@@ -41,6 +38,12 @@ module.exports = function() {
 				});
 			});
 			
+			let downloadButton = document.querySelector('#download');
+				if (downloadButton) downloadButton.addEventListener('click', function(event) {
+					
+					self.saveResults();
+				});
+			
 			let experience = document.querySelector('#music-experience');
 			if (experience) experience.addEventListener('change', function(event) {
 				musicExperience = experience.value;
@@ -56,13 +59,18 @@ module.exports = function() {
 				
 				button.addEventListener('click', function(event) {
 					
+					//let noteTested = 
+					
 					let correct = button.getAttribute('correct') === 'true';
 					assessmentResults.push({
 						'Name': name,
-						'Correct': correct,
+						//'Note Tested': null,
+						'Note Answered': button.getAttribute('chord'),
+						'Correct Selection': correct,
 						'Time': (new Date().getTime() - startTime) / 1000 + ' sec',
 						'Assessment Video': selectedVideo,
-						'Music Experience': musicExperience
+						'Music Experience': musicExperience,
+						'Timestamp': moment().format('L') + '-' + moment().format('LTS')
 					});
 					
 					startTime = new Date().getTime();
@@ -74,29 +82,6 @@ module.exports = function() {
 		triggerNextChordVideo: function() {
 			let nextVideo = document.querySelector('.assess-video.active video');
 			if (nextVideo) nextVideo.play();
-		},
-		
-		activateFullScreenVideo: function() {
-			
-			let videos = document.querySelectorAll('video');
-			videos.forEach(function(video) {
-				video.classList.remove('fullscreen');
-			});
-			
-			var video = document.querySelector('.watch-video.active video');
-			video.classList.add('fullscreen');
-			if (video.requestFullscreen) {
-				video.requestFullscreen();
-			}
-			else if (video.mozRequestFullScreen) {
-				video.mozRequestFullScreen();
-			}
-			else if (video.webkitRequestFullscreen) {
-				video.webkitRequestFullscreen();
-			}
-			else if (video.msRequestFullscreen) {
-				video.msRequestFullscreen();
-			}
 		},
 		
 		nextStep: function() {
@@ -165,10 +150,13 @@ module.exports = function() {
 			resultsTable.appendChild(thead);
 			
 			Object.keys(assessmentResults[0]).forEach(function(key) {
-				let columnHeading = document.createElement('td');
-				
-				columnHeading.appendChild(document.createTextNode(key));
-				tr.appendChild(columnHeading);
+				if (key !== 'Assessment Video') {
+					
+					let columnHeading = document.createElement('td');
+					
+					columnHeading.appendChild(document.createTextNode(key));
+					tr.appendChild(columnHeading);
+				}
 			});
 			
 			let tbody = document.createElement('tbody');
@@ -179,15 +167,45 @@ module.exports = function() {
 				
 				Object.keys(row).forEach(function(key) {
 					
-					let result = row[key];
-					
-					let td = document.createElement('td');
-					td.appendChild(document.createTextNode(result));
-					tr.appendChild(td);
+					if (key !== 'Assessment Video') {
+						
+						let result = row[key];
+						
+						let td = document.createElement('td');
+						td.appendChild(document.createTextNode(result));
+						tr.appendChild(td);
+					}
 				});
 				
 				tbody.appendChild(tr);
 			});
+		},
+		
+		saveResults: function() {
+			
+			let resultString = "";
+			
+			assessmentResults.forEach(function(row, rowIndex) {
+				
+				Object.keys(row).forEach(function(key, index) {
+						
+					let result = '';
+					// if (rowIndex === 0) result += key;
+					// if (index !== row.length) result += ',';
+					// else result += '/n';
+					result += row[key];
+				
+					console.log(index, Object.keys(row).length);
+					if (index !== Object.keys(row).length - 1) result += ',';
+
+					resultString += result;
+				});
+				resultString += '\n';
+			});
+			
+			var blob = new Blob([resultString], {type: "text/plain;charset=utf-8"});
+			console.log(resultString);
+			FileSaver.saveAs(blob, moment().format('L') + '-' + moment().format('LTS'));
 		},
 		
 		setKeys: function() {

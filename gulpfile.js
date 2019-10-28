@@ -32,7 +32,7 @@ gulp.task('sync', ['sass'], function() {
 
 var vendors = {
 	merge: [
-		//'./assets/vendors/js/three.js'
+		'./assets/vendors/moment.js'
 	]
 };
 
