@@ -185,15 +185,18 @@ module.exports = function() {
 			
 			let resultString = "";
 			
+			Object.keys(assessmentResults[0]).forEach(function(key, index) {
+					
+				resultString += key;
+				if (index != Object.keys(assessmentResults[0]).length - 1) resultString += ',';
+			});
+			resultString += '\n';
+			
 			assessmentResults.forEach(function(row, rowIndex) {
 				
 				Object.keys(row).forEach(function(key, index) {
 						
-					let result = '';
-					// if (rowIndex === 0) result += key;
-					// if (index !== row.length) result += ',';
-					// else result += '/n';
-					result += row[key];
+					let result = row[key];
 				
 					console.log(index, Object.keys(row).length);
 					if (index !== Object.keys(row).length - 1) result += ',';
@@ -205,7 +208,7 @@ module.exports = function() {
 			
 			var blob = new Blob([resultString], {type: "text/plain;charset=utf-8"});
 			console.log(resultString);
-			FileSaver.saveAs(blob, moment().format('L') + '-' + moment().format('LTS'));
+			FileSaver.saveAs(blob, 'synethesia_' + moment().format('L') + '-' + moment().format('LTS') + '.csv');
 		},
 		
 		setKeys: function() {
