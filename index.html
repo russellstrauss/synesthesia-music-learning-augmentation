@@ -21,9 +21,9 @@
 
 			<div class="form-group">
 				<h3>
-					<label for="fullName">Name</label>
+					<label for="fullName">Full Name</label>
 				</h3>
-				<input type="text" placeholder="Name" name="fullName">
+				<input type="text" id="fullName" placeholder="Full Name" name="fullName">
 			</div>
 
 			<div class="form-group">
@@ -38,9 +38,9 @@
 					<li>You have received formal musical education in the last 5 years, or</li>
 					<li>You consider yourself musically-inclined for reasons not listed above.</li>
 				</ul>
-				<select name="music-experience">
-					<option value="yes">Yes</option>
-					<option value="no">No</option>
+				<select id="music-experience" name="music-experience">
+					<option value="false">No</option>
+					<option value="true">Yes</option>
 				</select>
 			</div>
 
@@ -50,16 +50,16 @@
 		</div>
 
 		<div class="step watch-video">
-			<video controls>
+			<video id="control" controls>
 				<source src="assets/video/control.m4v" type="video/mp4"> Your browser does not support the video tag.
 			</video>
 
-			<video controls>
+			<video id="interference" controls>
 				<source src="assets/video/interference.m4v" type="video/mp4"> Your browser does not support the video
 				tag.
 			</video>
 
-			<video controls>
+			<video id="color" controls>
 				<source src="assets/video/color.mp4" type="video/mp4"> Your browser does not support the video tag.
 			</video>
 
@@ -118,6 +118,18 @@
 				<button class="chord" correct="false">C</button>
 				<button class="chord" correct="false">F</button>
 				<button class="chord" correct="true">G</button>
+			</div>
+		</div>
+		
+		<div class="step results">
+			
+			<h2>Test complete</h2>
+			
+			<h3>Results</h3>
+			<table class="results"></table>
+			
+			<div class="pagination">
+				<button class="center">Download Results</button>
 			</div>
 		</div>
 	</div>

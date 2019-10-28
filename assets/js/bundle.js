@@ -3,7 +3,10 @@
 
 module.exports = function () {
   var assessmentResults = [];
-  var startTime = new Date().getTime(); // setTimeout(function() {
+  var startTime = new Date().getTime();
+  var selectedVideo;
+  var musicExperience = 'false';
+  var name; // setTimeout(function() {
   // 	var endTime = new Date().getTime();
   // 	console.log(endTime - startTime);
   // }, 2000);
@@ -28,22 +31,29 @@ module.exports = function () {
           self.prevStep();
         });
       });
+      var experience = document.querySelector('#music-experience');
+      if (experience) experience.addEventListener('change', function (event) {
+        musicExperience = experience.value;
+      });
+      var nameField = document.querySelector('#fullName');
+      if (nameField) nameField.addEventListener('keyup', function (event) {
+        name = nameField.value;
+      });
       var answerButtons = document.querySelectorAll('.assess-video .pagination .chord');
       answerButtons.forEach(function (button) {
         button.addEventListener('click', function (event) {
           var correct = button.getAttribute('correct') === 'true';
           assessmentResults.push({
-            'correct': correct,
-            'time': (new Date().getTime() - startTime) / 1000 + ' sec'
+            'Name': name,
+            'Correct': correct,
+            'Time': (new Date().getTime() - startTime) / 1000 + ' sec',
+            'Assessment Video': selectedVideo,
+            'Music Experience': musicExperience
           });
-          console.log(assessmentResults);
           startTime = new Date().getTime();
           self.nextStep();
         });
-      }); // let startVideo = document.querySelector('.start');
-      // if (startVideo) startVideo.addEventListener('click', function() {
-      // 	self.activateFullScreenVideo();
-      // });
+      });
     },
     triggerNextChordVideo: function triggerNextChordVideo() {
       var nextVideo = document.querySelector('.assess-video.active video');
@@ -76,11 +86,18 @@ module.exports = function () {
           steps[i].classList.remove('active');
           steps[i + 1].classList.add('active');
           startTime = new Date().getTime();
-          break;
-        }
 
-        if (steps[i].classList.contains('assess-video')) {
-          self.triggerNextChordVideo();
+          if (steps[i + 1].classList.contains('assess-video')) {
+            // start vid automatically
+            self.triggerNextChordVideo();
+          }
+
+          if (steps[i + 1].classList.contains('results')) {
+            // start vid automatically
+            self.showResults();
+          }
+
+          break;
         }
       }
     },
@@ -104,7 +121,32 @@ module.exports = function () {
           video.classList.remove('active');
         } else {
           video.classList.add('active');
+          selectedVideo = video.getAttribute('id');
         }
+      });
+    },
+    showResults: function showResults() {
+      var resultsTable = document.querySelector('table.results');
+      var thead = document.createElement('thead');
+      var tr = document.createElement('tr');
+      thead.appendChild(tr);
+      resultsTable.appendChild(thead);
+      Object.keys(assessmentResults[0]).forEach(function (key) {
+        var columnHeading = document.createElement('td');
+        columnHeading.appendChild(document.createTextNode(key));
+        tr.appendChild(columnHeading);
+      });
+      var tbody = document.createElement('tbody');
+      resultsTable.appendChild(tbody);
+      assessmentResults.forEach(function (row) {
+        var tr = document.createElement('tr');
+        Object.keys(row).forEach(function (key) {
+          var result = row[key];
+          var td = document.createElement('td');
+          td.appendChild(document.createTextNode(result));
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
       });
     },
     setKeys: function setKeys() {
