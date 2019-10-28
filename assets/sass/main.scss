@@ -37,10 +37,21 @@
 	}
 }
 
-.watch-video video {
-	display: none;
+.watch-video {
 	
-	&.active {
-		display: block;
+	.next {
+		display: none; // Hide begin button until melody has started once
 	}
+	
+	video {
+		display: none;
+		
+		&.active {
+			display: block;
+		}
+	}
+}
+
+.results-section {
+	display: none;
 }

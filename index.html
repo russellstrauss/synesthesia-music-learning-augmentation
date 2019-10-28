@@ -63,11 +63,11 @@
 				<source src="assets/video/color.mp4" type="video/mp4"> Your browser does not support the video tag.
 			</video>
 			
-			<p>Use the play button above to listen to the melody. You can listen up to 2 times.</p>
+			<p>Use the play button above to listen to the melody. You can listen up to 2 times. After playing the melody, press "Begin Assessment" to begin.</p>
 
 			<div class="pagination">
 				<button class="prev left">Prev</button>
-				<button class="next right">Begin</button>
+				<button id="beginAssessment" class="next right">Begin Assessment</button>
 			</div>
 		</div>
 		
@@ -231,11 +231,20 @@
 			
 			<h2>Test complete</h2>
 			
-			<h3>Results</h3>
-			<table class="results"></table>
+			<p>Trial count: <span id="trialCount">1</span>, max limit 3</p>
+			
+			<div class="results-section">
+				<h3>Results</h3>
+				<table class="results"></table>
+			</div>
 			
 			<div class="pagination">
+				
+				<button id="displayResults" class="center">Display Results (Researcher Use Only)</button>
+				
 				<button id="download" class="center">Download Results</button>
+				
+				<button id="retry" class="center">Try Again</button>
 			</div>
 		</div>
 	</div>

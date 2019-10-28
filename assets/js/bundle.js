@@ -11,6 +11,8 @@ module.exports = function () {
   var name;
   var noteTested;
   var selectedVideoWatchCount = 0;
+  var trialCount = 1;
+  var tableHeadingAdded = false;
   return {
     settings: {},
     init: function init() {
@@ -43,6 +45,18 @@ module.exports = function () {
       if (nameField) nameField.addEventListener('keyup', function (event) {
         name = nameField.value;
       });
+      var retryButton = document.querySelector('#retry');
+      if (retryButton) retryButton.addEventListener('click', function (event) {
+        self.goToBeginning();
+
+        if (trialCount >= 3) {
+          retryButton.style.display = 'none';
+        }
+      });
+      var resultsButton = document.querySelector('#displayResults');
+      if (resultsButton) resultsButton.addEventListener('click', function (event) {
+        self.showResults();
+      });
       var assessmentVideoContainers = document.querySelectorAll('.assess-video');
       assessmentVideoContainers.forEach(function (videoContainer) {
         var answerButtons = videoContainer.querySelectorAll('.pagination .chord');
@@ -51,11 +65,12 @@ module.exports = function () {
             var correct = button.getAttribute('chord') === videoContainer.getAttribute('tested-chord') && button.getAttribute('chord') !== null;
             assessmentResults.push({
               'Name': name,
+              'Trial Count': trialCount,
               'Melody Listen Count': selectedVideoWatchCount,
               'Note Tested': videoContainer.getAttribute('tested-chord'),
               'Note Answered': button.getAttribute('chord'),
               'Correct Selection': correct,
-              'Time': (new Date().getTime() - startTime) / 1000 + ' sec',
+              'Time (sec)': (new Date().getTime() - startTime) / 1000,
               'Assessment Video': selectedVideo,
               'Music Experience': musicExperience,
               'Timestamp': moment().format('L') + '-' + moment().format('LTS')
@@ -85,14 +100,23 @@ module.exports = function () {
             self.triggerNextChordVideo();
           }
 
-          if (steps[i + 1].classList.contains('results')) {
-            // start vid automatically
-            self.showResults();
+          if (steps[i + 1].classList.contains('results')) {//self.showResults();
           }
 
           break;
         }
       }
+    },
+    goToBeginning: function goToBeginning() {
+      var self = this;
+      var steps = document.querySelectorAll('.step');
+
+      for (var i = 0; i < steps.length; i++) {
+        steps[i].classList.remove('active');
+      }
+
+      steps[0].classList.add('active');
+      self.reset();
     },
     prevStep: function prevStep() {
       var steps = document.querySelectorAll('.step');
@@ -118,6 +142,8 @@ module.exports = function () {
         }
 
         video.addEventListener('play', function () {
+          document.querySelector('#beginAssessment').style.display = 'block';
+
           if (selectedVideoWatchCount > 1) {
             video.pause();
             alert('The maximum melody play count is 2. You may now press "Begin" to start.');
@@ -129,12 +155,25 @@ module.exports = function () {
       });
     },
     showResults: function showResults() {
+      document.querySelector('#displayResults').style.display = 'none';
+      document.querySelector('.results-section').style.display = 'block';
       var resultsTable = document.querySelector('table.results');
-      var thead = document.createElement('thead');
+
+      while (resultsTable.firstChild) {
+        // remove all children
+        resultsTable.removeChild(resultsTable.firstChild);
+      }
+
       var tr = document.createElement('tr');
-      thead.appendChild(tr);
-      resultsTable.appendChild(thead);
-      Object.keys(assessmentResults[0]).forEach(function (key) {
+
+      if (tableHeadingAdded === false) {
+        var thead = document.createElement('thead');
+        thead.appendChild(tr);
+        resultsTable.appendChild(thead);
+        tableHeadingAdded = true;
+      }
+
+      Object.keys(assessmentResults[0]).forEach(function (key, index) {
         if (key !== 'Assessment Video') {
           var columnHeading = document.createElement('td');
           columnHeading.appendChild(document.createTextNode(key));
@@ -166,7 +205,6 @@ module.exports = function () {
       assessmentResults.forEach(function (row, rowIndex) {
         Object.keys(row).forEach(function (key, index) {
           var result = row[key];
-          console.log(index, Object.keys(row).length);
           if (index !== Object.keys(row).length - 1) result += ',';
           resultString += result;
         });
@@ -175,8 +213,15 @@ module.exports = function () {
       var blob = new Blob([resultString], {
         type: "text/plain;charset=utf-8"
       });
-      console.log(resultString);
       FileSaver.saveAs(blob, 'synethesia_' + moment().format('L') + '-' + moment().format('LTS') + '.csv');
+    },
+    reset: function reset() {
+      startTime = new Date().getTime();
+      trialCount++;
+      document.querySelector('#trialCount').textContent = trialCount.toString();
+      document.querySelector('#displayResults').style.display = 'block';
+      document.querySelector('.results-section').style.display = 'none';
+      tableHeadingAdded = false;
     },
     setKeys: function setKeys() {
       document.addEventListener('keyup', function (event) {
