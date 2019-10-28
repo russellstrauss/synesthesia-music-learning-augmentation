@@ -288,7 +288,7 @@ module.exports = function() {
 		
 		stopAndResetAllVideos: function() {
 			
-			let videos = document.querySelectorAll('.watch-video video');
+			let videos = document.querySelectorAll('video');
 			videos.forEach(function(video) {
 				video.pause();
 				video.currentTime = 0;
