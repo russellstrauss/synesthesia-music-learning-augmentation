@@ -224,13 +224,10 @@ module.exports = function() {
 			
 			Object.keys(assessmentResults[0]).forEach(function(key, index) {
 				
-				if (key !== 'Assessment Video') {
-					
-					let columnHeading = document.createElement('td');
-					
-					columnHeading.appendChild(document.createTextNode(key));
-					tr.appendChild(columnHeading);
-				}
+				let columnHeading = document.createElement('td');
+				
+				columnHeading.appendChild(document.createTextNode(key));
+				tr.appendChild(columnHeading);
 			});
 			
 			let tbody = document.createElement('tbody');
@@ -241,14 +238,11 @@ module.exports = function() {
 				
 				Object.keys(row).forEach(function(key) {
 					
-					if (key !== 'Assessment Video') {
-						
-						let result = row[key];
-						
-						let td = document.createElement('td');
-						td.appendChild(document.createTextNode(result));
-						tr.appendChild(td);
-					}
+					let result = row[key];
+					
+					let td = document.createElement('td');
+					td.appendChild(document.createTextNode(result));
+					tr.appendChild(td);
 				});
 				
 				tbody.appendChild(tr);

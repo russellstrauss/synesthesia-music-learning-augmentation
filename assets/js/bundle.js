@@ -187,23 +187,19 @@ module.exports = function () {
       }
 
       Object.keys(assessmentResults[0]).forEach(function (key, index) {
-        if (key !== 'Assessment Video') {
-          var columnHeading = document.createElement('td');
-          columnHeading.appendChild(document.createTextNode(key));
-          tr.appendChild(columnHeading);
-        }
+        var columnHeading = document.createElement('td');
+        columnHeading.appendChild(document.createTextNode(key));
+        tr.appendChild(columnHeading);
       });
       var tbody = document.createElement('tbody');
       resultsTable.appendChild(tbody);
       assessmentResults.forEach(function (row) {
         var tr = document.createElement('tr');
         Object.keys(row).forEach(function (key) {
-          if (key !== 'Assessment Video') {
-            var result = row[key];
-            var td = document.createElement('td');
-            td.appendChild(document.createTextNode(result));
-            tr.appendChild(td);
-          }
+          var result = row[key];
+          var td = document.createElement('td');
+          td.appendChild(document.createTextNode(result));
+          tr.appendChild(td);
         });
         tbody.appendChild(tr);
       });
