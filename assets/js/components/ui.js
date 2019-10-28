@@ -22,6 +22,17 @@ module.exports = function() {
 			this.bindEvents();
 			this.setKeys();
 			this.pickRandomVideo();
+			
+			var count0 = 0;
+			var count1 = 0;
+			var count2 = 0;
+			for (let i = 0; i < 10000; i++) {
+				
+				let random = utils.randomInt(0, 2);
+				if (random === 0) count0++;
+				if (random === 1) count1++;
+				if (random === 2) count2++;
+			}
 		},
 		
 		bindEvents: function() {
@@ -61,6 +72,7 @@ module.exports = function() {
 			if (retryButton) retryButton.addEventListener('click', function(event) {
 				
 				self.goToBeginning();
+				self.stopAndResetAllVideos();
 				
 				if (trialCount >= 3) {
 					retryButton.style.display = 'none';
@@ -112,6 +124,8 @@ module.exports = function() {
 		nextStep: function() {
 			
 			let self = this;
+			self.stopAndResetAllVideos();
+			
 			let steps =  document.querySelectorAll('.step');
 			for (let i = 0; i < steps.length; i++) {
 				
@@ -180,6 +194,7 @@ module.exports = function() {
 					
 					if (selectedVideoWatchCount > 1) {
 						video.pause();
+						video.currentTime = 0;
 						alert('The maximum melody play count is 2. You may now press "Begin" to start.');
 					}
 				});
@@ -274,6 +289,16 @@ module.exports = function() {
 			document.querySelector('#displayResults').style.display = 'block';
 			document.querySelector('.results-section').style.display = 'none';
 			tableHeadingAdded = false;
+			selectedVideoWatchCount = 0;
+		},
+		
+		stopAndResetAllVideos: function() {
+			
+			let videos = document.querySelectorAll('.watch-video video');
+			videos.forEach(function(video) {
+				video.pause();
+				video.currentTime = 0;
+			});
 		},
 		
 		setKeys: function() {
