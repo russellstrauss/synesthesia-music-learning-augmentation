@@ -8,6 +8,7 @@ module.exports = function() {
 	var musicExperience = 'false';
 	var name;
 	var noteTested;
+	var selectedVideoWatchCount = 0;
 	
 	return {
 		
@@ -54,27 +55,32 @@ module.exports = function() {
 				name = nameField.value;
 			});
 			
-			let answerButtons = document.querySelectorAll('.assess-video .pagination .chord');
-			answerButtons.forEach(function(button) {
+			
+			let assessmentVideoContainers = document.querySelectorAll('.assess-video');
+			assessmentVideoContainers.forEach(function(videoContainer) {
 				
-				button.addEventListener('click', function(event) {
+				let answerButtons = videoContainer.querySelectorAll('.pagination .chord');
+				
+				answerButtons.forEach(function(button) {
 					
-					//let noteTested = 
-					
-					let correct = button.getAttribute('correct') === 'true';
-					assessmentResults.push({
-						'Name': name,
-						//'Note Tested': null,
-						'Note Answered': button.getAttribute('chord'),
-						'Correct Selection': correct,
-						'Time': (new Date().getTime() - startTime) / 1000 + ' sec',
-						'Assessment Video': selectedVideo,
-						'Music Experience': musicExperience,
-						'Timestamp': moment().format('L') + '-' + moment().format('LTS')
+					button.addEventListener('click', function(event) {
+						
+						let correct = button.getAttribute('chord') === videoContainer.getAttribute('tested-chord') && button.getAttribute('chord') !== null;
+						assessmentResults.push({
+							'Name': name,
+							'Melody Listen Count': selectedVideoWatchCount,
+							'Note Tested': videoContainer.getAttribute('tested-chord'),
+							'Note Answered': button.getAttribute('chord'),
+							'Correct Selection': correct,
+							'Time': (new Date().getTime() - startTime) / 1000 + ' sec',
+							'Assessment Video': selectedVideo,
+							'Music Experience': musicExperience,
+							'Timestamp': moment().format('L') + '-' + moment().format('LTS')
+						});
+						
+						startTime = new Date().getTime();
+						self.nextStep();
 					});
-					
-					startTime = new Date().getTime();
-					self.nextStep();
 				});
 			});
 		},
@@ -137,6 +143,17 @@ module.exports = function() {
 					video.classList.add('active');
 					selectedVideo = video.getAttribute('id');
 				}
+				
+				video.addEventListener('play', function() {
+					if (selectedVideoWatchCount > 1) {
+						video.pause();
+						alert('The maximum melody play count is 2. You may now press "Begin" to start.');
+					}
+				});
+				
+				video.addEventListener('ended', function() {
+					selectedVideoWatchCount++;
+				});
 			});
 		},
 		
