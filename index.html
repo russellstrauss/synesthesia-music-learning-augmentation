@@ -1,39 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Synesthesia Music Learning Augmentation</title>
-	
+
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="assets/sass/main.css">
-	
+
 </head>
+
 <body>
-	
+
 	<div class="container">
-		
-		<div class="step1">
-			<h2>
-				<label for="music-experience">Are you musically predisposed?</label>
-			</h2>
-			<p>We define musical predisposition as:</p>
-			<ul>
-				<li>You play a musical instrument on a regular basis currently, or</li>
-				<li>You have played a musical instrument on a regular basis for more than a year in the last 5 years, or</li>
-				<li>You have received formal musical education in the last 5 years, or</li>
-				<li>You considered yourself to be musically inclined personally for reasons not listed above.</li>
-			</ul>
-			<select name="music-experience">
-				<option value="yes">Yes</option>
-				<option value="no">No</option>
-			</select>
-			
-			<button>Next</button>
+
+		<div class="step active">
+
+			<h2>Research Participant Information</h2>
+
+			<div class="form-group">
+				<h3>
+					<label for="fullName">Name</label>
+				</h3>
+				<input type="text" placeholder="Name" name="fullName">
+			</div>
+
+			<div class="form-group">
+				<h3>
+					<label for="music-experience">Are you musically predisposed?</label>
+				</h3>
+				<p>We define musical predisposition as:</p>
+				<ul>
+					<li>You play a musical instrument on a regular basis currently, or</li>
+					<li>You have played a musical instrument on a regular basis for more than a year in the last 5
+						years, or</li>
+					<li>You have received formal musical education in the last 5 years, or</li>
+					<li>You consider yourself musically-inclined for reasons not listed above.</li>
+				</ul>
+				<select name="music-experience">
+					<option value="yes">Yes</option>
+					<option value="no">No</option>
+				</select>
+			</div>
+
+			<div class="pagination">
+				<button class="next">Next</button>
+			</div>
+		</div>
+
+		<div class="step watch-video">
+			<video controls>
+				<source src="assets/video/control.m4v" type="video/mp4"> Your browser does not support the video tag.
+			</video>
+
+			<video controls>
+				<source src="assets/video/interference.m4v" type="video/mp4"> Your browser does not support the video
+				tag.
+			</video>
+
+			<video controls>
+				<source src="assets/video/color.mp4" type="video/mp4"> Your browser does not support the video tag.
+			</video>
+
+			<div class="pagination">
+				<button class="prev left">Prev</button>
+				<button class="next right">Next</button>
+			</div>
+		</div>
+
+		<div class="step assess-video">
+			<video controls>
+				<source src="assets/video/Am.m4v" type="video/mp4"> Your browser does not support the video tag.
+			</video>
+
+			<div class="pagination">
+				<button class="chord" correct="true">Am</button>
+				<button class="chord" correct="false">C</button>
+				<button class="chord" correct="false">F</button>
+				<button class="chord" correct="false">G</button>
+			</div>
+		</div>
+
+		<div class="step assess-video">
+			<video controls>
+				<source src="assets/video/C.m4v" type="video/mp4"> Your browser does not support the video tag.
+			</video>
+
+			<div class="pagination">
+				<button class="chord" correct="false">Am</button>
+				<button class="chord" correct="true">C</button>
+				<button class="chord" correct="false">F</button>
+				<button class="chord" correct="false">G</button>
+			</div>
+		</div>
+
+		<div class="step assess-video">
+			<video controls>
+				<source src="assets/video/F.m4v" type="video/mp4"> Your browser does not support the video tag.
+			</video>
+
+			<div class="pagination">
+				<button class="chord" correct="false">Am</button>
+				<button class="chord" correct="false">C</button>
+				<button class="chord" correct="true">F</button>
+				<button class="chord" correct="false">G</button>
+			</div>
+		</div>
+
+		<div class="step assess-video">
+			<video controls>
+				<source src="assets/video/G.m4v" type="video/mp4"> Your browser does not support the video tag.
+			</video>
+
+			<div class="pagination">
+				<button class="chord" correct="false">Am</button>
+				<button class="chord" correct="false">C</button>
+				<button class="chord" correct="false">F</button>
+				<button class="chord" correct="true">G</button>
+			</div>
 		</div>
 	</div>
-	
-	<script src="assets/vendors/js/vendors.js"></script>
+
+	<!-- <script src="assets/vendors/js/vendors.js"></script> -->
 	<script src="assets/js/bundle.js"></script>
 </body>
+
 </html>

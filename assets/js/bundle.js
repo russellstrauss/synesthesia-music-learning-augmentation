@@ -2,13 +2,111 @@
 "use strict";
 
 module.exports = function () {
+  var assessmentResults = [];
+  var startTime = new Date().getTime(); // setTimeout(function() {
+  // 	var endTime = new Date().getTime();
+  // 	console.log(endTime - startTime);
+  // }, 2000);
+
   return {
     settings: {},
     init: function init() {
       this.bindEvents();
       this.setKeys();
+      this.pickRandomVideo();
     },
-    bindEvents: function bindEvents() {},
+    bindEvents: function bindEvents() {
+      var self = this;
+      var steps = document.querySelectorAll('.step');
+      steps.forEach(function (step) {
+        var nextButton = step.querySelector('.next');
+        if (nextButton) nextButton.addEventListener('click', function (event) {
+          self.nextStep();
+        });
+        var prevButton = step.querySelector('.prev');
+        if (prevButton) prevButton.addEventListener('click', function (event) {
+          self.prevStep();
+        });
+      });
+      var answerButtons = document.querySelectorAll('.assess-video .pagination .chord');
+      answerButtons.forEach(function (button) {
+        button.addEventListener('click', function (event) {
+          var correct = button.getAttribute('correct') === 'true';
+          assessmentResults.push({
+            'correct': correct,
+            'time': (new Date().getTime() - startTime) / 1000 + ' sec'
+          });
+          console.log(assessmentResults);
+          startTime = new Date().getTime();
+          self.nextStep();
+        });
+      }); // let startVideo = document.querySelector('.start');
+      // if (startVideo) startVideo.addEventListener('click', function() {
+      // 	self.activateFullScreenVideo();
+      // });
+    },
+    triggerNextChordVideo: function triggerNextChordVideo() {
+      var nextVideo = document.querySelector('.assess-video.active video');
+      if (nextVideo) nextVideo.play();
+    },
+    activateFullScreenVideo: function activateFullScreenVideo() {
+      var videos = document.querySelectorAll('video');
+      videos.forEach(function (video) {
+        video.classList.remove('fullscreen');
+      });
+      var video = document.querySelector('.watch-video.active video');
+      video.classList.add('fullscreen');
+
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      } else if (video.mozRequestFullScreen) {
+        video.mozRequestFullScreen();
+      } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen();
+      } else if (video.msRequestFullscreen) {
+        video.msRequestFullscreen();
+      }
+    },
+    nextStep: function nextStep() {
+      var self = this;
+      var steps = document.querySelectorAll('.step');
+
+      for (var i = 0; i < steps.length; i++) {
+        if (steps[i + 1] && steps[i].classList.contains('active')) {
+          steps[i].classList.remove('active');
+          steps[i + 1].classList.add('active');
+          startTime = new Date().getTime();
+          break;
+        }
+
+        if (steps[i].classList.contains('assess-video')) {
+          self.triggerNextChordVideo();
+        }
+      }
+    },
+    prevStep: function prevStep() {
+      var steps = document.querySelectorAll('.step');
+
+      for (var i = 0; i < steps.length; i++) {
+        if (steps[i - 1] && steps[i].classList.contains('active')) {
+          steps[i].classList.remove('active');
+          steps[i - 1].classList.add('active');
+          startTime = new Date().getTime();
+          break;
+        }
+      }
+    },
+    pickRandomVideo: function pickRandomVideo() {
+      var videos = document.querySelectorAll('.watch-video video');
+      var randomVideoIndex = utils.randomInt(0, 2);
+      videos.forEach(function (video, index) {
+        if (index !== randomVideoIndex) {
+          video.classList.remove('active');
+        } else {
+          video.classList.add('active');
+        }
+      });
+    },
     setKeys: function setKeys() {
       document.addEventListener('keyup', function (event) {
         var enter = 13;
@@ -124,6 +222,11 @@ var Utilities = require('./utils.js');
       },
       isInteger: function isInteger(number) {
         return number % 1 === 0;
+      },
+      randomInt: function randomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
       },
       rotate: function rotate(array) {
         array.push(array.shift());

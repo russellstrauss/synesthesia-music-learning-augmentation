@@ -1,3 +1,41 @@
 @import 'responsive';
 @import 'mixins';
 @import 'elements';
+
+.form-group {
+	margin-bottom: 40px;
+}
+
+.step {
+	display: none;
+	
+	&.active {
+		display: block;
+	}
+}
+
+.pagination {
+	padding-top: 20px;
+	display: flex;
+	justify-content: space-between;
+	
+	.chord {
+		padding: 15px;
+		min-width: 100px;
+	}
+	
+	.next {
+		
+		&.right {
+			margin-left: auto;
+		}
+	}
+}
+
+.watch-video video {
+	display: none;
+	
+	&.active {
+		display: block;
+	}
+}
