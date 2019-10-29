@@ -222,7 +222,9 @@ module.exports = function () {
       var blob = new Blob([resultString], {
         type: "text/plain;charset=utf-8"
       });
-      FileSaver.saveAs(blob, 'synethesia_' + moment().format('L') + '-' + moment().format('LTS') + '.csv');
+      var nameInFile = '';
+      if (name) nameInFile += name.replace(/\s/g, '-').toLowerCase();
+      FileSaver.saveAs(blob, 'synethesia_' + nameInFile + '_' + moment().format('L') + '-' + moment().format('LTS') + '.csv');
     },
     reset: function reset() {
       startTime = new Date().getTime();
