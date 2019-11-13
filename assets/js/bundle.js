@@ -36,18 +36,28 @@ module.exports = function () {
     audioCursor: function audioCursor() {
       var audio = document.querySelector('audio');
       var timeCursor = document.querySelector('.time-cursor');
-      var interval, duration;
-      var timeInterval;
-      var optionCount = document.querySelectorAll('.answers .cells .cell').length;
+      var interval, duration, timeInterval, currentMeasure, currentCell;
+      var cells = document.querySelectorAll('.answers .cells .cell');
+      var optionCount = cells.length;
       audio.addEventListener('loadedmetadata', function () {
         duration = audio.duration;
         timeInterval = duration / optionCount;
+        console.log('Duration: ', duration);
+        console.log('timeInterval: ', timeInterval);
       });
       audio.addEventListener('play', function () {
         interval = setInterval(function () {
           var progress = audio.currentTime / duration * 100;
           timeCursor.style.left = progress.toString() + '%';
-          console.log('Progress: ', progress, 'timeInterval: ', timeInterval);
+
+          if (currentMeasure !== Math.floor(audio.currentTime / timeInterval)) {
+            cells.forEach(function (cell) {
+              cell.classList.remove('active');
+            });
+          }
+
+          currentMeasure = Math.floor(audio.currentTime / timeInterval);
+          cells[currentMeasure].classList.add('active');
         }, 10);
       });
 

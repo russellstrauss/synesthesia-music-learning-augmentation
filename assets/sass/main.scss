@@ -13,6 +13,7 @@
 		height: 100%;
 		top: 0;
 		left: 0;
+		z-index: 10;
 	}
 	
 	.cells {
@@ -21,12 +22,31 @@
 		min-height: 50px;
 		
 		.cell {
+			display: flex;
+			position: relative;
 			flex-grow: 1;
     		flex-basis: 0;
 			border: 1px solid #333;
 			height: 75px;
 			
-			display: flex;
+			
+			&.active {
+				
+				.overlay {
+					display: block;
+				}
+			}
+			
+			.overlay {
+				display: none;
+				position: absolute;
+				background-color: red;
+				opacity: .25;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+			}
 			
 			button {
 				width: 100%;

@@ -12,8 +12,10 @@ body {
 	background-color: #f0f0f0;
 	color: #444;
 	font-size: 16px;
-	padding: 100px 0;
-	overflow: visible;
+	display: flex;
+	height: 100vh;
+	flex-direction: column;
+	justify-content: center;
 }
 
 button {
@@ -53,7 +55,6 @@ input {
 	font-size: 1.25rem;
 	padding: 10px 15px;
 	border-radius: 3px;
-	//border: 1px solid #ccc;
 	border: 0;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
