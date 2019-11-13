@@ -22,6 +22,9 @@ module.exports = function() {
 			this.bindEvents();
 			this.setKeys();
 			this.pickRandomVideo();
+			//this.dragAndDrop();
+			this.sortable();
+			this.audioCursor();
 			
 			var count0 = 0;
 			var count1 = 0;
@@ -33,6 +36,90 @@ module.exports = function() {
 				if (random === 1) count1++;
 				if (random === 2) count2++;
 			}
+		},
+		
+		audioCursor: function() {
+			var audio = document.querySelector('audio');
+			var timeCursor = document.querySelector('.time-cursor');
+			var interval, duration;
+			var timeInterval;
+			var optionCount = document.querySelectorAll('.answers .cells .cell').length;
+			
+			audio.addEventListener('loadedmetadata', function() {
+				duration = audio.duration;
+				timeInterval = duration / optionCount;
+			});
+			
+			audio.addEventListener('play', function() { 
+				
+				interval = setInterval(function() {
+					
+					let progress = audio.currentTime / duration * 100;
+					timeCursor.style.left = progress.toString() + '%';
+					
+					console.log('Progress: ', progress, 'timeInterval: ', timeInterval);
+				}, 10);
+			});
+			
+			function stopInterval() {
+				clearInterval(interval);
+			}
+			audio.addEventListener('pause', stopInterval);
+			audio.addEventListener('ended', stopInterval);
+		},
+		
+		sortable: function() {
+			let from = document.querySelector('.controls');
+			let to = document.querySelectorAll('.answers .cells .cell');
+
+			new Sortable(from, {
+				group: {
+					name: 'musicAnswers',
+					pull: 'clone',
+					put: false
+				},
+				swapThreshold: .01
+			});
+			
+			to.forEach(function(cell) {
+				
+				new Sortable(cell, {
+					group: {
+						name: 'musicAnswers'
+					},
+					swapThreshold: .01,
+					
+					onEnd: function (/**Event*/event) {
+						var itemEl = event.item;  // dragged HTMLElement
+
+						let fromButton = event.from.querySelector('button');
+						console.log(fromButton, event.to);
+						if (fromButton === itemEl && fromButton !== event.to) fromButton.remove(); // 2nd condition not working (when dragging back into place)
+					}//,
+					
+					// onMove: function (event) {
+					// 	if (event.to.childElementCount > 0) {
+					// 		console.log(event.to.childElementCount);
+					// 		return false;
+					// 	}
+					// }
+				});
+			});
+		},
+		
+		dragAndDrop: function() {
+			
+			let from = document.querySelector('.controls');
+			let to = document.querySelectorAll('.answers .cells .cell');
+			
+			to.forEach(function(cell) {
+				
+				if (from && cell) dragula([from, cell], {
+					copy: true,
+					removeOnSpill: true
+				});
+			});
+			
 		},
 		
 		bindEvents: function() {

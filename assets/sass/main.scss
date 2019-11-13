@@ -2,6 +2,43 @@
 @import 'mixins';
 @import 'elements';
 
+.answers {
+	border: 1px solid black;
+	position: relative;
+	
+	.time-cursor {
+		width: 4px;
+		background-color: blue;
+		position: absolute;
+		height: 100%;
+		top: 0;
+		left: 0;
+	}
+	
+	.cells {
+		display: flex;
+		justify-content: center;
+		min-height: 50px;
+		
+		.cell {
+			flex-grow: 1;
+    		flex-basis: 0;
+			border: 1px solid #333;
+			height: 75px;
+			
+			display: flex;
+			
+			button {
+				width: 100%;
+			}
+		}
+	}
+}
+
+.controls {
+	margin-top: 50px;
+}
+
 .form-group {
 	margin-bottom: 40px;
 }
@@ -14,7 +51,7 @@
 	}
 }
 
-.pagination {
+.pagination, .controls {
 	padding-top: 20px;
 	display: flex;
 	justify-content: space-between;

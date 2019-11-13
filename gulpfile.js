@@ -32,7 +32,9 @@ gulp.task('sync', ['sass'], function() {
 
 var vendors = {
 	merge: [
-		'./assets/vendors/moment.js'
+		'./assets/vendors/js/Sortable.min.js',
+		'./assets/vendors/js/dragula.min.js',
+		'./assets/vendors/js/moment.js'
 	]
 };
 
