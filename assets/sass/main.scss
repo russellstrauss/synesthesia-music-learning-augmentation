@@ -85,6 +85,11 @@
 	display: flex;
 	justify-content: space-between;
 	
+	&.right-align {
+		margin-top: 50px;
+		justify-content: flex-end;
+	}
+	
 	.submit {
 		background-color: #28a745;
 	}
@@ -105,11 +110,6 @@
 			margin-left: auto;
 		}
 	}
-}
-
-.pagination {
-	margin-top: 50px;
-	justify-content: flex-end;
 }
 
 .watch-video {

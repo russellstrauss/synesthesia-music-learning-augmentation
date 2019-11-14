@@ -99,7 +99,7 @@ module.exports = function() {
 				timeInterval = duration / optionCount;
 			});
 			
-			audio.addEventListener('play', function() { 
+			audio.addEventListener('play', function() {
 				
 				if (!timeInterval) { // loadedmetadata decides to not fire often
 					duration = audio.duration;
@@ -129,6 +129,9 @@ module.exports = function() {
 					if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor;
 					if (cells[currentMeasure]) cells[currentMeasure].classList.add('active');
 				}, 10);
+				
+				let instructions = document.querySelector('.instructions');
+				if (instructions) instructions.style.display = 'none';
 			});
 			
 			function stopInterval() {
