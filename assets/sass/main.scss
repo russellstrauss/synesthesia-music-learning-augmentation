@@ -2,9 +2,14 @@
 @import 'mixins';
 @import 'elements';
 
+* {
+	@include disable-highlight;
+}
+
 .answers {
 	border: 1px solid black;
 	position: relative;
+	background-color: #f0f0f0;
 	
 	.time-cursor {
 		width: 4px;
@@ -29,12 +34,15 @@
 			border: 1px solid #333;
 			height: 75px;
 			
-			
 			&.active {
 				
 				.overlay {
 					display: block;
 				}
+			}
+			
+			.chord+.sortable-chosen {
+				display: none;
 			}
 			
 			.overlay {
@@ -49,6 +57,7 @@
 			}
 			
 			button {
+				border-radius: 0;
 				width: 100%;
 			}
 		}
@@ -76,7 +85,11 @@
 	display: flex;
 	justify-content: space-between;
 	
-	.chord {
+	.submit {
+		background-color: #28a745;
+	}
+	
+	.chord, .submit {
 		padding: 15px;
 		min-width: 100px;
 	}
@@ -92,6 +105,11 @@
 			margin-left: auto;
 		}
 	}
+}
+
+.pagination {
+	margin-top: 50px;
+	justify-content: flex-end;
 }
 
 .watch-video {

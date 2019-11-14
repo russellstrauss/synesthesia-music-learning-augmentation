@@ -14,43 +14,9 @@
 <body>
 
 	<div class="container">
-
+		
 		<div class="step active">
-			
-			<audio controls>
-				<source src="./assets/audio/melody-2-chopped.mp3" type="audio/mpeg">
-				Your browser does not support the audio tag.
-			</audio>
-			
-			<div class="answers">
-				<div class="time-cursor"></div>
-				<div class="cells">
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-					<div class="cell"><div class="overlay"></div></div>
-				</div>
-			</div>
-			
-			<div class="controls">
-				<button class="chord" chord="Am" draggable="true">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-			
-			
-			
-			
-			<!-- <h2>Research Participant Information</h2>
+			<h2>Research Participant Information</h2>
 
 			<div class="form-group">
 				<h3>
@@ -79,184 +45,42 @@
 
 			<div class="pagination">
 				<button class="next">Next</button>
-			</div> -->
+			</div>
 		</div>
-
-		<div class="step watch-video">
-			<video id="control" controls>
-				<source src="assets/video/control.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<video id="interference" controls>
-				<source src="assets/video/interference_new.mp4" type="video/mp4"> Your browser does not support the video
-				tag.
-			</video>
-
-			<video id="color" controls>
-				<source src="assets/video/color.mp4" type="video/mp4"> Your browser does not support the video tag.
-			</video>
+		
+		<div class="step">
 			
-			<p>Use the play button above to listen to the melody. You can listen up to 2 times. After playing the melody, press "Begin Assessment" to begin.</p>
-
-			<div class="pagination">
-				<button class="prev left">Prev</button>
-				<button id="beginAssessment" class="next right">Begin Assessment</button>
+			<audio controls>
+				<source src="./assets/audio/melody-2-chopped.wav" type="audio/mpeg">
+				Your browser does not support the audio tag.
+			</audio>
+			
+			<div class="answers">
+				<div class="time-cursor"></div>
+				<div class="cells">
+					<div class="cell" answer="Am"><div class="overlay"></div></div>
+					<div class="cell" answer="F"><div class="overlay"></div></div>
+					<div class="cell" answer="C"><div class="overlay"></div></div>
+					<div class="cell" answer="G"><div class="overlay"></div></div>
+					<div class="cell" answer="Am"><div class="overlay"></div></div>
+					<div class="cell" answer="F"><div class="overlay"></div></div>
+					<div class="cell" answer="C"><div class="overlay"></div></div>
+					<div class="cell" answer="G"><div class="overlay"></div></div>
+					<div class="cell" answer="F"><div class="overlay"></div></div>
+					<div class="cell" answer="G"><div class="overlay"></div></div>
+					<div class="cell" answer="C"><div class="overlay"></div></div>
+				</div>
 			</div>
-		</div>
-		
-		<div class="step assess-video" tested-chord="G">
-			<video controls>
-				<source src="assets/video/G.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
+			
+			<div class="controls">
 				<button class="chord" chord="Am">Am</button>
 				<button class="chord" chord="C">C</button>
 				<button class="chord" chord="F">F</button>
 				<button class="chord" chord="G">G</button>
 			</div>
-		</div>
-
-		<div class="step assess-video" tested-chord="Am">
-			<video controls>
-				<source src="assets/video/Am.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
+			
 			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-		
-		<div class="step assess-video" tested-chord="F">
-			<video controls>
-				<source src="assets/video/F.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-		
-		<div class="step assess-video" tested-chord="G">
-			<video controls>
-				<source src="assets/video/G.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-
-		<div class="step assess-video" tested-chord="C">
-			<video controls>
-				<source src="assets/video/C.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-
-		<div class="step assess-video" tested-chord="Am">
-			<video controls>
-				<source src="assets/video/Am.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-		
-		<div class="step assess-video" tested-chord="F">
-			<video controls>
-				<source src="assets/video/F.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-		
-		<div class="step assess-video" tested-chord="C">
-			<video controls>
-				<source src="assets/video/C.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-		
-		<div class="step assess-video" tested-chord="G">
-			<video controls>
-				<source src="assets/video/G.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-		
-		<div class="step assess-video" tested-chord="F">
-			<video controls>
-				<source src="assets/video/F.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-
-		<div class="step assess-video" tested-chord="Am">
-			<video controls>
-				<source src="assets/video/Am.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
-			</div>
-		</div>
-		
-		<div class="step assess-video" tested-chord="C">
-			<video controls>
-				<source src="assets/video/C.m4v" type="video/mp4"> Your browser does not support the video tag.
-			</video>
-
-			<div class="pagination">
-				<button class="chord" chord="Am">Am</button>
-				<button class="chord" chord="C">C</button>
-				<button class="chord" chord="F">F</button>
-				<button class="chord" chord="G">G</button>
+				<button class="submit next">Submit</button>
 			</div>
 		</div>
 		
@@ -264,20 +88,17 @@
 			
 			<h2>Test complete</h2>
 			
-			<p>Trial count: <span id="trialCount">1</span>, max limit 3</p>
-			
+			<!-- <p>Trial count: <span id="trialCount">1</span>, max limit 3</p>
+			 -->
 			<div class="results-section">
 				<h3>Results</h3>
 				<table class="results"></table>
 			</div>
 			
 			<div class="pagination">
-				
 				<button id="displayResults" class="center">Display Results (Researcher Use Only)</button>
-				
 				<button id="download" class="center">Download Results</button>
-				
-				<button id="retry" class="center">Try Again</button>
+				<!-- <button id="retry" class="center">Try Again</button> -->
 			</div>
 		</div>
 	</div>

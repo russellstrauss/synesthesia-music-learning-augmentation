@@ -4,48 +4,94 @@
 var FileSaver = require('file-saver');
 
 module.exports = function () {
+  var modes = ['interference', 'control', 'test'];
+  var body = document.querySelector('body');
   var assessmentResults = [];
   var startTime = new Date().getTime();
   var selectedVideo;
   var musicExperience = 'false';
   var name;
   var noteTested;
-  var selectedVideoWatchCount = 0;
+  var selectedVideoWatchCount = 0,
+      audioPlayCount = 0;
   var trialCount = 1;
   var tableHeadingAdded = false;
+  var audio = document.querySelector('audio');
   return {
-    settings: {},
+    settings: {
+      showBackgroundColors: true,
+      mode: 'test',
+      test: {
+        'Am': '#3BB173',
+        'F': '#4D9CDF',
+        'C': '#E25453',
+        'G': '#E1BB2A'
+      },
+      interference: {
+        'Am': '#E25453',
+        'F': '#3BB173',
+        'C': '#E1BC2B',
+        'G': '#4D9CDF'
+      },
+      control: {
+        'Am': '#F0F0F0',
+        'F': '#F0F0F0',
+        'C': '#F0F0F0',
+        'G': '#F0F0F0'
+      }
+    },
     init: function init() {
       this.bindEvents();
       this.setKeys();
-      this.pickRandomVideo(); //this.dragAndDrop();
-
-      this.sortable();
+      this.pickRandomMode();
+      this.dragAndDrop();
       this.audioCursor();
-      var count0 = 0;
-      var count1 = 0;
-      var count2 = 0;
-
-      for (var i = 0; i < 10000; i++) {
-        var random = utils.randomInt(0, 2);
-        if (random === 0) count0++;
-        if (random === 1) count1++;
-        if (random === 2) count2++;
-      }
+    },
+    generateAnswers: function generateAnswers() {
+      var self = this;
+      var answers = [];
+      var userAnswers = [];
+      var answerElements = document.querySelectorAll('.answers .cells .cell');
+      var accuracy = [];
+      answerElements.forEach(function (cell, index) {
+        var answer = cell.getAttribute('answer');
+        answers.push(answer);
+        var userAnswerElement = cell.querySelector('.chord');
+        if (userAnswerElement) userAnswers.push(userAnswerElement.getAttribute('chord'));else userAnswers.push(null);
+        accuracy.push(answers[index] === userAnswers[index]);
+      });
+      accuracy.forEach(function (measure, index) {
+        assessmentResults.push({
+          'Name': name,
+          'Melody Listen Count': audioPlayCount,
+          'Note Tested': answers[index],
+          'Note Answered': userAnswers[index],
+          'Correct Selection': measure,
+          'Experiment': self.settings.mode,
+          'Music Experience': musicExperience,
+          'Timestamp': moment().format('L') + '-' + moment().format('LTS')
+        });
+      });
+      startTime = new Date().getTime();
+      console.log(assessmentResults);
     },
     audioCursor: function audioCursor() {
-      var audio = document.querySelector('audio');
+      var self = this;
       var timeCursor = document.querySelector('.time-cursor');
-      var interval, duration, timeInterval, currentMeasure, currentCell;
+      var interval, duration, timeInterval, currentMeasure, currentNote, currentColor, currentCell;
       var cells = document.querySelectorAll('.answers .cells .cell');
       var optionCount = cells.length;
       audio.addEventListener('loadedmetadata', function () {
         duration = audio.duration;
         timeInterval = duration / optionCount;
-        console.log('Duration: ', duration);
-        console.log('timeInterval: ', timeInterval);
       });
       audio.addEventListener('play', function () {
+        if (!timeInterval) {
+          // loadedmetadata decides to not fire often
+          duration = audio.duration;
+          timeInterval = duration / optionCount;
+        }
+
         interval = setInterval(function () {
           var progress = audio.currentTime / duration * 100;
           timeCursor.style.left = progress.toString() + '%';
@@ -57,7 +103,15 @@ module.exports = function () {
           }
 
           currentMeasure = Math.floor(audio.currentTime / timeInterval);
-          cells[currentMeasure].classList.add('active');
+          currentCell = cells[currentMeasure];
+
+          if (currentCell) {
+            currentNote = currentCell.getAttribute('answer');
+            currentColor = self.settings[self.settings.mode][currentNote];
+          }
+
+          if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor;
+          if (cells[currentMeasure]) cells[currentMeasure].classList.add('active');
         }, 10);
       });
 
@@ -66,9 +120,13 @@ module.exports = function () {
       }
 
       audio.addEventListener('pause', stopInterval);
-      audio.addEventListener('ended', stopInterval);
+      audio.addEventListener('ended', function () {
+        stopInterval();
+        body.style.backgroundColor = '#f0f0f0';
+        audioPlayCount++;
+      });
     },
-    sortable: function sortable() {
+    dragAndDrop: function dragAndDrop() {
       var from = document.querySelector('.controls');
       var to = document.querySelectorAll('.answers .cells .cell');
       new Sortable(from, {
@@ -77,7 +135,18 @@ module.exports = function () {
           pull: 'clone',
           put: false
         },
-        swapThreshold: .01
+        sort: false,
+        swapThreshold: .01,
+        onEnd: function onEnd(event) {
+          var buttons = event.to.querySelectorAll('button');
+
+          if (buttons.length > 1 && event.to.classList.contains('cell')) {
+            // prevent double items in cell
+            buttons.forEach(function (button) {
+              if (button !== event.item) button.remove();
+            });
+          }
+        }
       });
       to.forEach(function (cell) {
         new Sortable(cell, {
@@ -85,32 +154,15 @@ module.exports = function () {
             name: 'musicAnswers'
           },
           swapThreshold: .01,
-          onEnd: function onEnd(
-          /**Event*/
-          event) {
-            var itemEl = event.item; // dragged HTMLElement
-
+          onEnd: function onEnd(event) {
             var fromButton = event.from.querySelector('button');
-            console.log(fromButton, event.to);
-            if (fromButton === itemEl && fromButton !== event.to) fromButton.remove(); // 2nd condition not working (when dragging back into place)
-          } //,
-          // onMove: function (event) {
-          // 	if (event.to.childElementCount > 0) {
-          // 		console.log(event.to.childElementCount);
-          // 		return false;
-          // 	}
-          // }
+            if (fromButton === event.item && fromButton !== event.to) fromButton.remove(); // 2nd condition not working (when dragging back into place)
 
-        });
-      });
-    },
-    dragAndDrop: function dragAndDrop() {
-      var from = document.querySelector('.controls');
-      var to = document.querySelectorAll('.answers .cells .cell');
-      to.forEach(function (cell) {
-        if (from && cell) dragula([from, cell], {
-          copy: true,
-          removeOnSpill: true
+            if (event.to.childElementCount > 2) {
+              // prevent double items in cell
+              event.item.remove();
+            }
+          }
         });
       });
     },
@@ -152,28 +204,9 @@ module.exports = function () {
       if (resultsButton) resultsButton.addEventListener('click', function (event) {
         self.showResults();
       });
-      var assessmentVideoContainers = document.querySelectorAll('.assess-video');
-      assessmentVideoContainers.forEach(function (videoContainer) {
-        var answerButtons = videoContainer.querySelectorAll('.pagination .chord');
-        answerButtons.forEach(function (button) {
-          button.addEventListener('click', function (event) {
-            var correct = button.getAttribute('chord') === videoContainer.getAttribute('tested-chord') && button.getAttribute('chord') !== null;
-            assessmentResults.push({
-              'Name': name,
-              'Trial Count': trialCount,
-              'Melody Listen Count': selectedVideoWatchCount,
-              'Note Tested': videoContainer.getAttribute('tested-chord'),
-              'Note Answered': button.getAttribute('chord'),
-              'Correct Selection': correct,
-              'Time (sec)': (new Date().getTime() - startTime) / 1000,
-              'Assessment Video': selectedVideo,
-              'Music Experience': musicExperience,
-              'Timestamp': moment().format('L') + '-' + moment().format('LTS')
-            });
-            startTime = new Date().getTime();
-            self.nextStep();
-          });
-        });
+      var submitButton = document.querySelector('.submit');
+      if (submitButton) submitButton.addEventListener('click', function (event) {
+        self.generateAnswers();
       });
     },
     triggerNextChordVideo: function triggerNextChordVideo() {
@@ -183,6 +216,8 @@ module.exports = function () {
     nextStep: function nextStep() {
       var self = this;
       self.stopAndResetAllVideos();
+      body.style.backgroundColor = '#f0f0f0';
+      audio.pause();
       var steps = document.querySelectorAll('.step');
 
       for (var i = 0; i < steps.length; i++) {
@@ -250,6 +285,10 @@ module.exports = function () {
           selectedVideoWatchCount++;
         });
       });
+    },
+    pickRandomMode: function pickRandomMode() {
+      var randomIndex = utils.randomInt(0, 2);
+      this.settings.mode = modes[randomIndex];
     },
     showResults: function showResults() {
       document.querySelector('#displayResults').style.display = 'none';
