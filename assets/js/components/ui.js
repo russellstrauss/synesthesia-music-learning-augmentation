@@ -104,8 +104,11 @@ module.exports = function() {
 				notes.push(cell.getAttribute('answer'));
 			});
 			
-			Object.keys(self.settings.audio).forEach(function(audioTrack) {
-				self.settings.audio[audioTrack].volume = .75;
+			let audioTracks = Object.keys(self.settings.audio);
+			audioTracks.forEach(function(key) {
+				let track = self.settings.audio[key];
+				track.load();
+				track.volume = .5;
 			});
 			
 			audio.addEventListener('loadedmetadata', function() {
