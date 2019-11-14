@@ -98,9 +98,14 @@ module.exports = function() {
 			var cells = document.querySelectorAll('.answers .cells .cell');
 			var currentNote = cells[0].getAttribute('answer');
 			var optionCount = cells.length;
+			
 			var notes = [];
 			cells.forEach(function(cell) {
 				notes.push(cell.getAttribute('answer'));
+			});
+			
+			Object.keys(self.settings.audio).forEach(function(audioTrack) {
+				self.settings.audio[audioTrack].volume = .75;
 			});
 			
 			audio.addEventListener('loadedmetadata', function() {

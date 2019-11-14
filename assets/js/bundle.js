@@ -96,6 +96,9 @@ module.exports = function () {
       cells.forEach(function (cell) {
         notes.push(cell.getAttribute('answer'));
       });
+      Object.keys(self.settings.audio).forEach(function (audioTrack) {
+        self.settings.audio[audioTrack].volume = .75;
+      });
       audio.addEventListener('loadedmetadata', function () {
         duration = audio.duration;
         timeInterval = duration / optionCount;
