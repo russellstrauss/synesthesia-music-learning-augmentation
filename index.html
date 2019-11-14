@@ -15,7 +15,20 @@
 
 	<div class="container">
 		
-		<div class="step active">
+		<div class="step center active">
+			<h2>Researcher Use Only</h2>
+			<select id="condition" name="condition">
+				<option value="" disabled selected>Select a Condition</option>
+				<option value="test">Test</option>
+				<option value="interference">Interference</option>
+				<option value="control">Control</option>
+			</select>
+			<div class="pagination">
+				<button class="next" id="recordCondition">Next</button>
+			</div>
+		</div>
+		
+		<div class="step">
 			<h2>Research Participant Information</h2>
 
 			<div class="form-group">
@@ -52,7 +65,7 @@
 			
 			<h2>Instructions</h2>
 			
-			<p class="instructions">On the following screen, select the play button to begin listening to a melody. As the melody plays, the progress indicator will identify the current measure by highlighting it. Each measure of the melody is comprised of multiple notes of a single chord. During or after listening, guess which chord is associated with each measure by dragging and dropping the chords into each block.</p>
+			<p class="instructions">On the following screen, select the play button to begin listening to a melody. As the melody plays, the progress indicator will identify the current measure by highlighting it. During or after listening, guess which chord is associated with each measure by dragging and dropping chords into each block.</p>
 			
 			<div class="pagination">
 				<button class="prev">Back</button>
@@ -61,7 +74,6 @@
 		</div>
 		
 		<div class="step">
-			
 			
 			<audio controls>
 				<source src="./assets/audio/melody-2-chopped.wav" type="audio/mpeg">
@@ -97,14 +109,13 @@
 			</div>
 		</div>
 		
-		<div class="step results">
+		<div class="step results center">
 			
 			<h2>Test complete</h2>
 			
 			<!-- <p>Trial count: <span id="trialCount">1</span>, max limit 3</p>
 			 -->
 			<div class="results-section">
-				<h3>Results</h3>
 				<table class="results"></table>
 			</div>
 			

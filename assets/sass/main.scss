@@ -75,6 +75,14 @@
 .step {
 	display: none;
 	
+	&.center {
+		text-align: center;
+		
+		.pagination {
+			justify-content: center;
+		}
+	}
+	
 	&.active {
 		display: block;
 	}

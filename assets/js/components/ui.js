@@ -14,7 +14,7 @@ module.exports = function() {
 	var trialCount = 1;
 	var tableHeadingAdded = false;
 	var audio = document.querySelector('audio');
-	
+		
 	return {
 		
 		settings: {
@@ -37,6 +37,12 @@ module.exports = function() {
 				'F': '#F0F0F0',
 				'C': '#F0F0F0',
 				'G': '#F0F0F0'
+			},
+			audio: {
+				'Am': new Audio('./assets/audio/Am.wav'),
+				'F': new Audio('./assets/audio/F.wav'),
+				'C': new Audio('./assets/audio/C.wav'),
+				'G': new Audio('./assets/audio/G.wav')
 			}
 		},
 		
@@ -82,17 +88,20 @@ module.exports = function() {
 			});
 			
 			startTime = new Date().getTime();
-			
-			console.log(assessmentResults);
 		},
 		
 		audioCursor: function() {
 			
 			var self = this;
 			var timeCursor = document.querySelector('.time-cursor');
-			var interval, duration, timeInterval, currentMeasure, currentNote, currentColor, currentCell;
-			var cells = document.querySelectorAll('.answers .cells .cell')
+			var interval, duration, timeInterval, currentMeasure = -1, currentColor, queueChord;
+			var cells = document.querySelectorAll('.answers .cells .cell');
+			var currentNote = cells[0].getAttribute('answer');
 			var optionCount = cells.length;
+			var notes = [];
+			cells.forEach(function(cell) {
+				notes.push(cell.getAttribute('answer'));
+			});
 			
 			audio.addEventListener('loadedmetadata', function() {
 				duration = audio.duration;
@@ -111,20 +120,21 @@ module.exports = function() {
 					let progress = audio.currentTime / duration * 100;
 					timeCursor.style.left = progress.toString() + '%';
 					
-					if (currentMeasure !== Math.floor(audio.currentTime / timeInterval)) {
+					//console.log(currentMeasure, Math.floor(audio.currentTime / timeInterval), currentMeasure !== Math.floor(audio.currentTime / timeInterval));
+					if (currentMeasure !== Math.floor(audio.currentTime / timeInterval)) { // if interval has changed, reset
+						
 						cells.forEach(function(cell) {
 							cell.classList.remove('active');
 						});
+						queueChord = true;
 					}
 					
 					currentMeasure = Math.floor(audio.currentTime / timeInterval);
+					currentNote = notes[currentMeasure];
+					currentColor = self.settings[self.settings.mode][currentNote];
 					
-					currentCell = cells[currentMeasure];
-					
-					if (currentCell) {
-						currentNote = currentCell.getAttribute('answer');
-						currentColor = self.settings[self.settings.mode][currentNote];
-					}
+					if (queueChord && self.settings.audio[currentNote]) self.settings.audio[currentNote].play();
+					queueChord = false;
 					
 					if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor;
 					if (cells[currentMeasure]) cells[currentMeasure].classList.add('active');
@@ -139,7 +149,7 @@ module.exports = function() {
 			}
 			audio.addEventListener('pause', stopInterval);
 			audio.addEventListener('ended', function() {
-				stopInterval();
+				clearInterval(interval);
 				body.style.backgroundColor = '#f0f0f0';
 				audioPlayCount++;
 			});
@@ -210,7 +220,6 @@ module.exports = function() {
 			
 			let downloadButton = document.querySelector('#download');
 			if (downloadButton) downloadButton.addEventListener('click', function(event) {
-				
 				self.saveResults();
 			});
 			
@@ -229,7 +238,6 @@ module.exports = function() {
 				
 				self.goToBeginning();
 				self.stopAndResetAllVideos();
-				
 				if (trialCount >= 3) {
 					retryButton.style.display = 'none';
 				}
@@ -237,8 +245,16 @@ module.exports = function() {
 			
 			let resultsButton = document.querySelector('#displayResults');
 			if (resultsButton) resultsButton.addEventListener('click', function(event) {
-				
 				self.showResults();
+			});
+			
+			let conditionButton = document.querySelector('#recordCondition');
+			let conditionElement = document.querySelector('#condition');
+			let condition;
+			if (conditionButton) conditionButton.addEventListener('click', function(event) {
+				condition = conditionElement.value;
+				if (condition === '') condition = modes[utils.randomInt(0, 2)];
+				self.settings.mode = condition;
 			});
 			
 			let submitButton = document.querySelector('.submit');
@@ -247,15 +263,9 @@ module.exports = function() {
 			});
 		},
 		
-		triggerNextChordVideo: function() {
-			let nextVideo = document.querySelector('.assess-video.active video');
-			if (nextVideo) nextVideo.play();
-		},
-		
 		nextStep: function() {
 			
 			let self = this;
-			self.stopAndResetAllVideos();
 			body.style.backgroundColor = '#f0f0f0';
 			audio.pause();
 			
@@ -266,15 +276,6 @@ module.exports = function() {
 					steps[i].classList.remove('active');
 					steps[i + 1].classList.add('active');
 					startTime = new Date().getTime();
-					
-					if (steps[i + 1].classList.contains('assess-video')) { // start vid automatically
-						self.triggerNextChordVideo();
-					}
-					
-					if (steps[i + 1].classList.contains('results')) {
-						//self.showResults();
-					}
-					
 					break;
 				}
 			}
@@ -303,39 +304,6 @@ module.exports = function() {
 					break;
 				}
 			}
-		},
-		
-		pickRandomVideo: function() {
-			
-			let videos = document.querySelectorAll('.watch-video video');
-			
-			let randomVideoIndex = utils.randomInt(0, 2);
-			
-			videos.forEach(function(video, index) {
-				
-				if (index !== randomVideoIndex) {
-					video.classList.remove('active');
-				}
-				else {
-					video.classList.add('active');
-					selectedVideo = video.getAttribute('id');
-				}
-				
-				video.addEventListener('play', function() {
-					
-					document.querySelector('#beginAssessment').style.display = 'block';
-					
-					if (selectedVideoWatchCount > 1) {
-						video.pause();
-						video.currentTime = 0;
-						alert('The maximum melody play count is 2. You may now press "Begin" to start.');
-					}
-				});
-				
-				video.addEventListener('ended', function() {
-					selectedVideoWatchCount++;
-				});
-			});
 		},
 		
 		pickRandomMode: function() {
@@ -426,15 +394,6 @@ module.exports = function() {
 			document.querySelector('.results-section').style.display = 'none';
 			tableHeadingAdded = false;
 			selectedVideoWatchCount = 0;
-		},
-		
-		stopAndResetAllVideos: function() {
-			
-			let videos = document.querySelectorAll('video');
-			videos.forEach(function(video) {
-				video.pause();
-				video.currentTime = 0;
-			});
 		},
 		
 		setKeys: function() {
