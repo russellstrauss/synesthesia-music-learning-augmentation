@@ -182,28 +182,6 @@ module.exports = function () {
         onStart: function onStart(event) {
           var color = self.settings[self.settings.mode][event.item.getAttribute('chord')];
           if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
-        },
-        onMove: function onMove(
-        /**Event*/
-        evt,
-        /**Event*/
-        originalEvent) {
-          evt.dragged; // dragged HTMLElement
-
-          evt.draggedRect; // DOMRect {left, top, right, bottom}
-
-          evt.related; // HTMLElement on which have guided
-
-          evt.relatedRect; // DOMRect
-
-          evt.willInsertAfter; // Boolean that is true if Sortable will insert drag element after target by default
-
-          originalEvent.clientY; // mouse position
-          // return false; — for cancel
-          // return -1; — insert before target
-          // return 1; — insert after target
-
-          evt.to.classList.add('test-class');
         }
       });
       to.forEach(function (cell) {
