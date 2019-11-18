@@ -129,8 +129,8 @@ module.exports = function () {
           currentNote = notes[currentMeasure];
           currentColor = self.settings[self.settings.mode][currentNote];
           if (queueChord && self.settings.audio[currentNote]) self.settings.audio[currentNote].play();
-          queueChord = false;
-          if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor;
+          queueChord = false; //if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor; // change to button dragged
+
           if (cells[currentMeasure]) cells[currentMeasure].classList.add('active');
         }, 10);
         var instructions = document.querySelector('.instructions');
@@ -149,6 +149,7 @@ module.exports = function () {
       });
     },
     dragAndDrop: function dragAndDrop() {
+      var self = this;
       var from = document.querySelector('.controls');
       var to = document.querySelectorAll('.answers .cells .cell');
       new Sortable(from, {
@@ -168,6 +169,12 @@ module.exports = function () {
               if (button !== event.item) button.remove();
             });
           }
+
+          body.style.backgroundColor = '#F0F0F0';
+        },
+        onStart: function onStart(event) {
+          var color = self.settings[self.settings.mode][event.item.getAttribute('chord')];
+          if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
         }
       });
       to.forEach(function (cell) {

@@ -16,6 +16,7 @@ body {
 	height: 100vh;
 	flex-direction: column;
 	justify-content: center;
+	transition: background-color 250ms ease;
 }
 
 button {

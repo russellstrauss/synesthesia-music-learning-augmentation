@@ -144,7 +144,8 @@ module.exports = function() {
 					if (queueChord && self.settings.audio[currentNote]) self.settings.audio[currentNote].play();
 					queueChord = false;
 					
-					if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor;
+					//if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor; // change to button dragged
+					
 					if (cells[currentMeasure]) cells[currentMeasure].classList.add('active');
 				}, 10);
 				
@@ -164,6 +165,8 @@ module.exports = function() {
 		},
 		
 		dragAndDrop: function() {
+			
+			let self = this;
 			let from = document.querySelector('.controls');
 			let to = document.querySelectorAll('.answers .cells .cell');
 
@@ -185,6 +188,13 @@ module.exports = function() {
 							if (button !== event.item) button.remove()
 						});
 					}
+					body.style.backgroundColor = '#F0F0F0';
+				},
+				
+				onStart: function (event) {
+
+					let color = self.settings[self.settings.mode][event.item.getAttribute('chord')];
+					if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
 				}
 			});
 			
@@ -196,7 +206,7 @@ module.exports = function() {
 					},
 					swapThreshold: .01,
 					
-					onEnd: function (event) {
+					onEnd: function(event) {
 
 						let fromButton = event.from.querySelector('button');
 						if (fromButton === event.item && fromButton !== event.to) fromButton.remove(); // 2nd condition not working (when dragging back into place)
