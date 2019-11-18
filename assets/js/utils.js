@@ -113,6 +113,20 @@
 				return Math.floor(Math.random() * (max - min + 1)) + min;
 			},
 			
+			shuffle: function(array) {
+				
+				let arrayCopy = array.slice(0);
+				var currentIndex = arrayCopy.length, temporaryValue, randomIndex;
+				while (0 !== currentIndex) {
+					randomIndex = Math.floor(Math.random() * currentIndex);
+					currentIndex -= 1;
+					temporaryValue = arrayCopy[currentIndex];
+					arrayCopy[currentIndex] = arrayCopy[randomIndex];
+					arrayCopy[randomIndex] = temporaryValue;
+				}
+				return arrayCopy;
+			},
+			
 			rotate: function(array) {
 				array.push(array.shift());
 				return array;

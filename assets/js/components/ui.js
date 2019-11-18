@@ -14,29 +14,33 @@ module.exports = function() {
 	var trialCount = 1;
 	var tableHeadingAdded = false;
 	var audio = document.querySelector('audio');
-		
+	var red = '#E25453', blue = '#4D9CDF', green = '#3BB173', yellow = '#E1BB2A';
+	var colors = [red, green, blue, yellow];
+	var interferenceColors = utils.shuffle(colors);
+	var defaultBackgroundColor = '#F0F0F0';
+	
 	return {
 		
 		settings: {
 			showBackgroundColors: true,
 			mode: 'test',
 			test: {
-				'Am': '#3BB173',
-				'F': '#4D9CDF',
-				'C': '#E25453',
-				'G': '#E1BB2A'
+				'Am': colors[0],
+				'C': colors[1],
+				'F': colors[2],
+				'G': colors[3]
 			},
 			interference: {
-				'Am': '#E25453',
-				'F': '#3BB173',
-				'C': '#E1BC2B',
-				'G': '#4D9CDF'
+				'Am': interferenceColors[0],
+				'C': interferenceColors[1],
+				'F': interferenceColors[2],
+				'G': interferenceColors[3]
 			},
 			control: {
-				'Am': '#F0F0F0',
-				'F': '#F0F0F0',
-				'C': '#F0F0F0',
-				'G': '#F0F0F0'
+				'Am': defaultBackgroundColor,
+				'C': defaultBackgroundColor,
+				'F': defaultBackgroundColor,
+				'G': defaultBackgroundColor
 			},
 			audio: {
 				'Am': new Audio('./assets/audio/Am.wav'),
@@ -159,7 +163,7 @@ module.exports = function() {
 			audio.addEventListener('pause', stopInterval);
 			audio.addEventListener('ended', function() {
 				clearInterval(interval);
-				body.style.backgroundColor = '#f0f0f0';
+				body.style.backgroundColor = defaultBackgroundColor;
 				audioPlayCount++;
 			});
 		},
@@ -188,7 +192,7 @@ module.exports = function() {
 							if (button !== event.item) button.remove()
 						});
 					}
-					body.style.backgroundColor = '#F0F0F0';
+					body.style.backgroundColor = defaultBackgroundColor;
 				},
 				
 				onStart: function (event) {
@@ -284,7 +288,7 @@ module.exports = function() {
 		nextStep: function() {
 			
 			let self = this;
-			body.style.backgroundColor = '#f0f0f0';
+			body.style.backgroundColor = defaultBackgroundColor;
 			audio.pause();
 			
 			let steps =  document.querySelectorAll('.step');

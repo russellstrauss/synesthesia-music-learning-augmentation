@@ -17,27 +17,34 @@ module.exports = function () {
   var trialCount = 1;
   var tableHeadingAdded = false;
   var audio = document.querySelector('audio');
+  var red = '#E25453',
+      blue = '#4D9CDF',
+      green = '#3BB173',
+      yellow = '#E1BB2A';
+  var colors = [red, green, blue, yellow];
+  var interferenceColors = utils.shuffle(colors);
+  var defaultBackgroundColor = '#F0F0F0';
   return {
     settings: {
       showBackgroundColors: true,
       mode: 'test',
       test: {
-        'Am': '#3BB173',
-        'F': '#4D9CDF',
-        'C': '#E25453',
-        'G': '#E1BB2A'
+        'Am': colors[0],
+        'C': colors[1],
+        'F': colors[2],
+        'G': colors[3]
       },
       interference: {
-        'Am': '#E25453',
-        'F': '#3BB173',
-        'C': '#E1BC2B',
-        'G': '#4D9CDF'
+        'Am': interferenceColors[0],
+        'C': interferenceColors[1],
+        'F': interferenceColors[2],
+        'G': interferenceColors[3]
       },
       control: {
-        'Am': '#F0F0F0',
-        'F': '#F0F0F0',
-        'C': '#F0F0F0',
-        'G': '#F0F0F0'
+        'Am': defaultBackgroundColor,
+        'C': defaultBackgroundColor,
+        'F': defaultBackgroundColor,
+        'G': defaultBackgroundColor
       },
       audio: {
         'Am': new Audio('./assets/audio/Am.wav'),
@@ -144,7 +151,7 @@ module.exports = function () {
       audio.addEventListener('pause', stopInterval);
       audio.addEventListener('ended', function () {
         clearInterval(interval);
-        body.style.backgroundColor = '#f0f0f0';
+        body.style.backgroundColor = defaultBackgroundColor;
         audioPlayCount++;
       });
     },
@@ -170,7 +177,7 @@ module.exports = function () {
             });
           }
 
-          body.style.backgroundColor = '#F0F0F0';
+          body.style.backgroundColor = defaultBackgroundColor;
         },
         onStart: function onStart(event) {
           var color = self.settings[self.settings.mode][event.item.getAttribute('chord')];
@@ -248,7 +255,7 @@ module.exports = function () {
     },
     nextStep: function nextStep() {
       var self = this;
-      body.style.backgroundColor = '#f0f0f0';
+      body.style.backgroundColor = defaultBackgroundColor;
       audio.pause();
       var steps = document.querySelectorAll('.step');
 
@@ -476,6 +483,22 @@ var Utilities = require('./utils.js');
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
+      },
+      shuffle: function shuffle(array) {
+        var arrayCopy = array.slice(0);
+        var currentIndex = arrayCopy.length,
+            temporaryValue,
+            randomIndex;
+
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+          temporaryValue = arrayCopy[currentIndex];
+          arrayCopy[currentIndex] = arrayCopy[randomIndex];
+          arrayCopy[randomIndex] = temporaryValue;
+        }
+
+        return arrayCopy;
       },
       rotate: function rotate(array) {
         array.push(array.shift());
