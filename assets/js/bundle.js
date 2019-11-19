@@ -122,7 +122,7 @@ module.exports = function () {
 
         interval = setInterval(function () {
           var progress = audio.currentTime / duration * 100;
-          timeCursor.style.left = progress.toString() + '%'; //console.log(currentMeasure, Math.floor(audio.currentTime / timeInterval), currentMeasure !== Math.floor(audio.currentTime / timeInterval));
+          timeCursor.style.left = progress.toString() + '%';
 
           if (currentMeasure !== Math.floor(audio.currentTime / timeInterval)) {
             // if interval has changed, reset
@@ -135,7 +135,29 @@ module.exports = function () {
           currentMeasure = Math.floor(audio.currentTime / timeInterval);
           currentNote = notes[currentMeasure];
           currentColor = self.settings[self.settings.mode][currentNote];
-          if (queueChord && self.settings.audio[currentNote]) self.settings.audio[currentNote].play();
+
+          if (queueChord && self.settings.audio[currentNote]) {
+            var cell, chord, color, previousNote;
+            cell = cells[currentMeasure];
+            if (cell && cell.querySelector('button')) chord = cell.querySelector('button').getAttribute('chord'); // get user selected answer and then play it
+
+            if (chord) color = self.settings[self.settings.mode][chord];
+            if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
+
+            var _audioTracks = Object.keys(self.settings.audio);
+
+            _audioTracks.forEach(function (key) {
+              var track = self.settings.audio[key];
+              track.load();
+            });
+
+            if (chord) {
+              self.settings.audio[chord].play();
+            } else {
+              body.style.backgroundColor = defaultBackgroundColor;
+            }
+          }
+
           queueChord = false; //if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor; // change to button dragged
 
           if (cells[currentMeasure]) cells[currentMeasure].classList.add('active');
@@ -175,14 +197,10 @@ module.exports = function () {
             buttons.forEach(function (button) {
               if (button !== event.item) button.remove();
             });
-          }
+          } //body.style.backgroundColor = defaultBackgroundColor;
 
-          body.style.backgroundColor = defaultBackgroundColor;
         },
-        onStart: function onStart(event) {
-          var color = self.settings[self.settings.mode][event.item.getAttribute('chord')];
-          if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
-        }
+        onStart: function onStart(event) {}
       });
       to.forEach(function (cell) {
         new Sortable(cell, {

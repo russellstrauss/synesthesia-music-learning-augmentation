@@ -132,7 +132,6 @@ module.exports = function() {
 					let progress = audio.currentTime / duration * 100;
 					timeCursor.style.left = progress.toString() + '%';
 					
-					//console.log(currentMeasure, Math.floor(audio.currentTime / timeInterval), currentMeasure !== Math.floor(audio.currentTime / timeInterval));
 					if (currentMeasure !== Math.floor(audio.currentTime / timeInterval)) { // if interval has changed, reset
 						
 						cells.forEach(function(cell) {
@@ -145,7 +144,26 @@ module.exports = function() {
 					currentNote = notes[currentMeasure];
 					currentColor = self.settings[self.settings.mode][currentNote];
 					
-					if (queueChord && self.settings.audio[currentNote]) self.settings.audio[currentNote].play();
+					if (queueChord && self.settings.audio[currentNote])  {
+						
+						let cell, chord, color, previousNote;
+						cell = cells[currentMeasure];
+						if (cell && cell.querySelector('button')) chord = cell.querySelector('button').getAttribute('chord'); // get user selected answer and then play it
+						if (chord) color = self.settings[self.settings.mode][chord];
+						if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
+						
+						let audioTracks = Object.keys(self.settings.audio);
+						audioTracks.forEach(function(key) {
+							let track = self.settings.audio[key];
+							track.load();
+						});
+						if (chord) {
+							self.settings.audio[chord].play();
+						}
+						else {
+							body.style.backgroundColor = defaultBackgroundColor;
+						}
+					}
 					queueChord = false;
 					
 					//if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor; // change to button dragged
@@ -185,20 +203,18 @@ module.exports = function() {
 				onEnd: function (event) {
 					
 					let buttons = event.to.querySelectorAll('button');
-					
 					if (buttons.length > 1 && event.to.classList.contains('cell')) { // prevent double items in cell
 						
 						buttons.forEach(function(button) {
 							if (button !== event.item) button.remove()
 						});
 					}
-					body.style.backgroundColor = defaultBackgroundColor;
+					//body.style.backgroundColor = defaultBackgroundColor;
 				},
 				
 				onStart: function (event) {
 
-					let color = self.settings[self.settings.mode][event.item.getAttribute('chord')];
-					if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
+					
 				}
 			});
 			
