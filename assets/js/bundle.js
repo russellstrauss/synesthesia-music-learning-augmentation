@@ -141,7 +141,13 @@ module.exports = function () {
             cell = cells[currentMeasure];
             if (cell && cell.querySelector('button')) chord = cell.querySelector('button').getAttribute('chord'); // get user selected answer and then play it
 
-            if (chord) color = self.settings[self.settings.mode][chord];
+            if (chord && self.settings.mode === 'test') color = self.settings[self.settings.mode][chord];
+
+            if (chord && self.settings.mode === 'interference') {
+              color = colors[utils.randomInt(0, colors.length - 1)];
+              console.log(self.settings.mode, color);
+            }
+
             if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
 
             var _audioTracks = Object.keys(self.settings.audio);
@@ -158,8 +164,7 @@ module.exports = function () {
             }
           }
 
-          queueChord = false; //if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor; // change to button dragged
-
+          queueChord = false;
           if (cells[currentMeasure]) cells[currentMeasure].classList.add('active');
         }, 10);
         var instructions = document.querySelector('.instructions');
@@ -197,8 +202,7 @@ module.exports = function () {
             buttons.forEach(function (button) {
               if (button !== event.item) button.remove();
             });
-          } //body.style.backgroundColor = defaultBackgroundColor;
-
+          }
         },
         onStart: function onStart(event) {}
       });
