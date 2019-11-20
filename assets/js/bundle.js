@@ -14,7 +14,8 @@ module.exports = function () {
   var noteTested;
   var selectedVideoWatchCount = 0,
       audioPlayCount = 0;
-  var trialCount = 1;
+  var trialCount = 1,
+      restartCount = 0;
   var tableHeadingAdded = false;
   var audio = document.querySelector('audio');
   var red = '#E25453',
@@ -76,7 +77,8 @@ module.exports = function () {
       accuracy.forEach(function (measure, index) {
         assessmentResults.push({
           'Name': name,
-          'Melody Listen Count': audioPlayCount,
+          'Melody Listen Count (Full)': audioPlayCount,
+          'Restart Count': restartCount,
           'Note Tested': answers[index],
           'Note Answered': userAnswers[index],
           'Correct Selection': measure,
@@ -141,21 +143,9 @@ module.exports = function () {
             cell = cells[currentMeasure];
             if (cell && cell.querySelector('button')) chord = cell.querySelector('button').getAttribute('chord'); // get user selected answer and then play it
 
-            if (chord && self.settings.mode === 'test') color = self.settings[self.settings.mode][chord];
-
-            if (chord && self.settings.mode === 'interference') {
-              color = colors[utils.randomInt(0, colors.length - 1)];
-              console.log(self.settings.mode, color);
-            }
-
+            color = self.getColor(chord, self.settings.mode);
             if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
-
-            var _audioTracks = Object.keys(self.settings.audio);
-
-            _audioTracks.forEach(function (key) {
-              var track = self.settings.audio[key];
-              track.load();
-            });
+            self.clearAudioBuffer();
 
             if (chord) {
               self.settings.audio[chord].play();
@@ -170,17 +160,25 @@ module.exports = function () {
         var instructions = document.querySelector('.instructions');
         if (instructions) instructions.style.display = 'none';
       });
-
-      function stopInterval() {
+      audio.addEventListener('pause', function () {
         clearInterval(interval);
-      }
-
-      audio.addEventListener('pause', stopInterval);
+        body.style.backgroundColor = defaultBackgroundColor;
+      });
       audio.addEventListener('ended', function () {
         clearInterval(interval);
         body.style.backgroundColor = defaultBackgroundColor;
         audioPlayCount++;
       });
+    },
+    getColor: function getColor(chord, mode) {
+      var self = this,
+          color;
+      if (chord && mode === 'test') color = self.settings[mode][chord];else if (chord && mode === 'interference') {
+        color = colors[utils.randomInt(0, colors.length - 1)];
+      } else {
+        color = defaultBackgroundColor;
+      }
+      return color;
     },
     dragAndDrop: function dragAndDrop() {
       var self = this;
@@ -203,8 +201,9 @@ module.exports = function () {
               if (button !== event.item) button.remove();
             });
           }
-        },
-        onStart: function onStart(event) {}
+
+          self.addButtonEvents();
+        }
       });
       to.forEach(function (cell) {
         new Sortable(cell, {
@@ -220,8 +219,36 @@ module.exports = function () {
               // prevent double items in cell
               event.item.remove();
             }
+
+            self.addButtonEvents();
           }
         });
+      });
+    },
+    addButtonEvents: function addButtonEvents() {
+      var self = this;
+      var buttonTimeout = null;
+      var chordButtons = document.querySelectorAll('.chord');
+      chordButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          self.clearAudioBuffer();
+          if (buttonTimeout) clearTimeout(buttonTimeout);
+          var chord = button.getAttribute('chord');
+          self.settings.audio[chord].play();
+          var color = self.getColor(chord, self.settings.mode);
+          if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
+          buttonTimeout = setTimeout(function () {
+            body.style.backgroundColor = defaultBackgroundColor;
+          }, 2000);
+        });
+      });
+    },
+    clearAudioBuffer: function clearAudioBuffer() {
+      var self = this;
+      var audioTracks = Object.keys(self.settings.audio);
+      audioTracks.forEach(function (key) {
+        var track = self.settings.audio[key];
+        track.load();
       });
     },
     bindEvents: function bindEvents() {
@@ -241,6 +268,7 @@ module.exports = function () {
       if (restartButton) restartButton.addEventListener('click', function (event) {
         audio.currentTime = 0;
         audio.play();
+        restartCount++;
       });
       var downloadButton = document.querySelector('#download');
       if (downloadButton) downloadButton.addEventListener('click', function (event) {
@@ -279,6 +307,7 @@ module.exports = function () {
       if (submitButton) submitButton.addEventListener('click', function (event) {
         self.generateAnswers();
       });
+      self.addButtonEvents();
     },
     nextStep: function nextStep() {
       var self = this;
