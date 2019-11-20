@@ -166,8 +166,6 @@ module.exports = function() {
 					}
 					queueChord = false;
 					
-					//if (self.settings.showBackgroundColors) body.style.backgroundColor = currentColor; // change to button dragged
-					
 					if (cells[currentMeasure]) cells[currentMeasure].classList.add('active');
 				}, 10);
 				
@@ -213,7 +211,6 @@ module.exports = function() {
 				},
 				
 				onStart: function (event) {
-
 					
 				}
 			});
@@ -254,6 +251,12 @@ module.exports = function() {
 				if (prevButton) prevButton.addEventListener('click', function(event) {
 					self.prevStep();
 				});
+			});
+			
+			let restartButton = document.querySelector('#restart');
+			if (restartButton) restartButton.addEventListener('click', function(event) {
+				audio.currentTime = 0;
+				audio.play();
 			});
 			
 			let downloadButton = document.querySelector('#download');
