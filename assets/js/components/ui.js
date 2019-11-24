@@ -188,24 +188,27 @@ module.exports = function() {
 		
 		sendColorToDevice: function(color) {
 			
-			axios({
-				method: 'post',
-				url: 'https://io.adafruit.com/api/v2/kvnkey/feeds/color/data',
-				data: { 
-					"value": color
-				},
-				headers: {
-					'content-type': "application/json",
-					'x-aio-key': "cc7c424522214ee6ae2106eebed45135"
-				},
-			})
-			.then(function(response) {
-				//console.log(response);
-			})
-			.catch(function(error) {
-				console.log('Error making request to Adafruit service to update color: ')
-				console.log(error);
-			});
+			if (this.settings.colorOutputMode === 'hud') {
+				
+				axios({
+					method: 'post',
+					url: 'https://io.adafruit.com/api/v2/kvnkey/feeds/color/data',
+					data: { 
+						"value": color
+					},
+					headers: {
+						'content-type': "application/json",
+						'x-aio-key': "cc7c424522214ee6ae2106eebed45135"
+					},
+				})
+				.then(function(response) {
+					//console.log(response);
+				})
+				.catch(function(error) {
+					console.log('Error making request to Adafruit service to update color: ')
+					console.log(error);
+				});
+			}
 		},
 		
 		getColor: function(chord, condition) {
