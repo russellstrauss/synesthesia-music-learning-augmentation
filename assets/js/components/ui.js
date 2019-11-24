@@ -1,8 +1,9 @@
 var FileSaver = require('file-saver');
+var axios = require('axios');
 
 module.exports = function() {
 	
-	var modes = ['interference', 'control', 'test'];
+	var conditions = ['interference', 'control', 'test'];
 	var body = document.querySelector('body');
 	var assessmentResults = [];
 	var startTime = new Date().getTime();
@@ -17,13 +18,15 @@ module.exports = function() {
 	var red = '#E25453', blue = '#4D9CDF', green = '#3BB173', yellow = '#E1BB2A';
 	var colors = [red, green, blue, yellow];
 	var interferenceColors = utils.shuffle(colors);
+	var deviceColors = ['#FF0000', '#0AFF00', '#0037FF', '#F8FF00'];
 	var defaultBackgroundColor = '#F0F0F0';
 	
 	return {
 		
 		settings: {
 			showBackgroundColors: true,
-			mode: 'test',
+			colorOutputMode: 'hud',
+			condition: 'test',
 			test: {
 				'Am': colors[0],
 				'C': colors[1],
@@ -86,7 +89,7 @@ module.exports = function() {
 					'Note Tested': answers[index],
 					'Note Answered': userAnswers[index],
 					'Correct Selection': measure,
-					'Experiment': self.settings.mode,
+					'Experiment': self.settings.condition,
 					'Music Experience': musicExperience,
 					'Timestamp': moment().format('L') + '-' + moment().format('LTS')
 				});
@@ -143,21 +146,23 @@ module.exports = function() {
 					
 					currentMeasure = Math.floor(audio.currentTime / timeInterval);
 					currentNote = notes[currentMeasure];
-					currentColor = self.settings[self.settings.mode][currentNote];
+					currentColor = self.settings[self.settings.condition][currentNote];
 					
 					if (queueChord && self.settings.audio[currentNote])  {
 						
 						let cell, chord, color, previousNote;
 						cell = cells[currentMeasure];
 						if (cell && cell.querySelector('button')) chord = cell.querySelector('button').getAttribute('chord'); // get user selected answer and then play it
-						color = self.getColor(chord, self.settings.mode);
+						color = self.getColor(chord, self.settings.condition);
 						if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
 						
 						self.clearAudioBuffer();
 						if (chord) {
+							self.sendColorToDevice(color);
 							self.settings.audio[chord].play();
 						}
 						else {
+							self.sendColorToDevice('OFF');
 							body.style.backgroundColor = defaultBackgroundColor;
 						}
 					}
@@ -181,10 +186,35 @@ module.exports = function() {
 			});
 		},
 		
-		getColor: function(chord, mode) {
+		sendColorToDevice: function(color) {
+			
+			axios({
+				method: 'post',
+				url: 'https://io.adafruit.com/api/v2/kvnkey/feeds/color/data',
+				data: { 
+					"value": color
+				},
+				headers: {
+					'content-type': "application/json",
+					'x-aio-key': "cc7c424522214ee6ae2106eebed45135"
+				},
+			})
+			.then(function(response) {
+				//console.log(response);
+			})
+			.catch(function(error) {
+				console.log('Error making request to Adafruit service to update color: ')
+				console.log(error);
+			});
+		},
+		
+		getColor: function(chord, condition) {
+			
 			let self = this, color;
-			if (chord && mode === 'test') color = self.settings[mode][chord];
-			else if (chord && mode === 'interference') {
+			if (chord && condition === 'test') {
+				color = self.settings[condition][chord];
+			}
+			else if (chord && condition === 'interference') {
 				color = colors[utils.randomInt(0, colors.length - 1)];
 			}
 			else {
@@ -253,12 +283,15 @@ module.exports = function() {
 					self.clearAudioBuffer();
 					if (buttonTimeout) clearTimeout(buttonTimeout);
 					let chord = button.getAttribute('chord');
-					self.settings.audio[chord].play();
+					let color = self.getColor(chord, self.settings.condition);
 					
-					let color = self.getColor(chord, self.settings.mode);
+					self.settings.audio[chord].play();
+					self.sendColorToDevice(color);
+					
 					if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
 					buttonTimeout = setTimeout(function() {
 						body.style.backgroundColor = defaultBackgroundColor;
+						self.sendColorToDevice('OFF');
 					}, 2000);
 				});
 			});
@@ -330,11 +363,30 @@ module.exports = function() {
 			
 			let conditionButton = document.querySelector('#recordCondition');
 			let conditionElement = document.querySelector('#condition');
-			let condition;
+			let colorOutputElement = document.querySelector('#colorOutput');
+			let condition, colorOutputMode;
 			if (conditionButton) conditionButton.addEventListener('click', function(event) {
 				condition = conditionElement.value;
-				if (condition === '') condition = modes[utils.randomInt(0, 2)];
-				self.settings.mode = condition;
+				colorOutputMode = colorOutputElement.value;
+				if (condition === '') condition = conditions[utils.randomInt(0, 2)];
+				self.settings.condition = condition;
+				self.settings.colorOutputMode = colorOutputMode;
+				if (colorOutputMode === 'hud') {
+					
+					self.settings.showBackgroundColors = false;
+					
+					colors = deviceColors;
+					interferenceColors = utils.shuffle(deviceColors);
+					self.settings.test.Am = colors[0];
+					self.settings.test.C = colors[1];
+					self.settings.test.F = colors[2];
+					self.settings.test.G = colors[3];
+					
+					self.settings.interference.Am = interferenceColors[0];
+					self.settings.interference.C = interferenceColors[1];
+					self.settings.interference.F = interferenceColors[2];
+					self.settings.interference.G = interferenceColors[3];
+				}
 			});
 			
 			let submitButton = document.querySelector('.submit');
@@ -392,7 +444,7 @@ module.exports = function() {
 			
 			let randomIndex = utils.randomInt(0, 2);
 			
-			this.settings.mode = modes[randomIndex];
+			this.settings.condition = conditions[randomIndex];
 		},
 		
 		showResults: function() {

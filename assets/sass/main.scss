@@ -8,6 +8,20 @@
 
 $button-color: #343a40;
 
+.settings {
+	
+	select {
+		width: 250px;
+		text-align: center;
+		display: block;
+		margin: 30px auto;
+		
+		option {
+			cursor: pointer;
+		}
+	}
+}
+
 .answers {
 	border: 1px solid black;
 	position: relative;

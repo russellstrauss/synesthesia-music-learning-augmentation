@@ -13,14 +13,23 @@
 
 	<div class="container">
 		
-		<div class="step center active">
+		<div class="step center active settings">
+			
 			<h2>Researcher Use Only</h2>
+			
 			<select id="condition" name="condition">
 				<option value="" disabled selected>Select a Condition</option>
 				<option value="test">Test</option>
 				<option value="interference">Interference</option>
 				<option value="control">Control</option>
 			</select>
+			
+			<select id="colorOutput" name="colorOutput">
+				<option value="" disabled selected>Select Color Output</option>
+				<option value="hud">Heads-up Display</option>
+				<option value="screen">Screen</option>
+			</select>
+			
 			<div class="pagination">
 				<button class="next" id="recordCondition">Next</button>
 			</div>
@@ -76,14 +85,16 @@
 			<button id="restart">Restart Melody</button>
 			
 			<audio controls>
-				<source src="./assets/audio/melody-2.wav" type="audio/mpeg">
+				<!-- <source src="./assets/audio/melody-2.wav" type="audio/mpeg"> -->
+					<source src="./assets/audio/Project2TestMelody-modified.wav" type="audio/mpeg">
 				Your browser does not support the audio tag.
 			</audio>
 			
 			<div class="answers">
 				<div class="time-cursor"></div>
 				<div class="cells">
-					<div class="cell" answer="Am"><div class="overlay"></div></div>
+					<!-- Melody 1 -->
+					<!-- <div class="cell" answer="Am"><div class="overlay"></div></div>
 					<div class="cell" answer="F"><div class="overlay"></div></div>
 					<div class="cell" answer="C"><div class="overlay"></div></div>
 					<div class="cell" answer="G"><div class="overlay"></div></div>
@@ -91,6 +102,18 @@
 					<div class="cell" answer="F"><div class="overlay"></div></div>
 					<div class="cell" answer="C"><div class="overlay"></div></div>
 					<div class="cell" answer="G"><div class="overlay"></div></div>
+					<div class="cell" answer="F"><div class="overlay"></div></div>
+					<div class="cell" answer="G"><div class="overlay"></div></div>
+					<div class="cell" answer="C"><div class="overlay"></div></div> -->
+					<!-- Melody 2 -->
+					<div class="cell" answer="F"><div class="overlay"></div></div>
+					<div class="cell" answer="G"><div class="overlay"></div></div>
+					<div class="cell" answer="Am"><div class="overlay"></div></div>
+					<div class="cell" answer="C"><div class="overlay"></div></div>
+					<div class="cell" answer="F"><div class="overlay"></div></div>
+					<div class="cell" answer="G"><div class="overlay"></div></div>
+					<div class="cell" answer="C"><div class="overlay"></div></div>
+					<div class="cell" answer="Am"><div class="overlay"></div></div>
 					<div class="cell" answer="F"><div class="overlay"></div></div>
 					<div class="cell" answer="G"><div class="overlay"></div></div>
 					<div class="cell" answer="C"><div class="overlay"></div></div>
