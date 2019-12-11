@@ -61,21 +61,24 @@ module.exports = function() {
 			this.pickRandomMode();
 			this.dragAndDrop();
 			this.audioCursor();
-			this.setOverlayColors();
 		},
 		
 		setOverlayColors: function() {
 			
 			let self = this;
+			console.log(self.settings.condition);
 			answerElements.forEach(function(cell) {
 				
 				let overlay = cell.querySelector('.overlay');
 				let chord = cell.getAttribute('answer');
 				let color;
 				if (self.settings.condition === 'test') color = self.settings[self.settings.condition][chord];
-				if (self.settings.condition === 'interference') color = utils.shuffle(colors)[0];
-				if (overlay) overlay.style.backgroundColor = color;
-				console.log(color);
+				else if (self.settings.condition === 'interference') color = utils.shuffle(colors)[0];
+				else {
+					overlay.style.display = 'none';
+				}
+				if (overlay && self.settings.condition !== 'control') overlay.style.backgroundColor = color;
+				//console.log(self.settings.condition);
 			});
 		},
 		
@@ -400,6 +403,8 @@ module.exports = function() {
 					self.settings.interference.F = interferenceColors[2];
 					self.settings.interference.G = interferenceColors[3];
 				}
+				
+				self.setOverlayColors();
 			});
 			
 			let submitButton = document.querySelector('.submit');
