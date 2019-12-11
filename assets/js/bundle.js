@@ -28,9 +28,10 @@ module.exports = function () {
   var interferenceColors = utils.shuffle(colors);
   var deviceColors = ['#FF0000', '#0AFF00', '#0037FF', '#F8FF00'];
   var defaultBackgroundColor = '#F0F0F0';
+  var answerElements = document.querySelectorAll('.answers .cells .cell');
   return {
     settings: {
-      showBackgroundColors: true,
+      showBackgroundColors: false,
       colorOutputMode: 'hud',
       condition: 'test',
       test: {
@@ -64,12 +65,24 @@ module.exports = function () {
       this.pickRandomMode();
       this.dragAndDrop();
       this.audioCursor();
+      this.setOverlayColors();
+    },
+    setOverlayColors: function setOverlayColors() {
+      var self = this;
+      answerElements.forEach(function (cell) {
+        var overlay = cell.querySelector('.overlay');
+        var chord = cell.getAttribute('answer');
+        var color;
+        if (self.settings.condition === 'test') color = self.settings[self.settings.condition][chord];
+        if (self.settings.condition === 'interference') color = utils.shuffle(colors)[0];
+        if (overlay) overlay.style.backgroundColor = color;
+        console.log(color);
+      });
     },
     generateAnswers: function generateAnswers() {
       var self = this;
       var answers = [];
       var userAnswers = [];
-      var answerElements = document.querySelectorAll('.answers .cells .cell');
       var accuracy = [];
       answerElements.forEach(function (cell, index) {
         var answer = cell.getAttribute('answer');
@@ -149,13 +162,14 @@ module.exports = function () {
 
             color = self.getColor(chord, self.settings.condition);
             if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
+            if (self.settings.condition === 'interference') self.setOverlayColors();
             self.clearAudioBuffer();
 
             if (chord) {
               self.sendColorToDevice(color);
               self.settings.audio[chord].play();
             } else {
-              self.sendColorToDevice('OFF');
+              self.sendColorToDevice('#000000');
               body.style.backgroundColor = defaultBackgroundColor;
             }
           }
@@ -264,13 +278,7 @@ module.exports = function () {
           if (buttonTimeout) clearTimeout(buttonTimeout);
           var chord = button.getAttribute('chord');
           var color = self.getColor(chord, self.settings.condition);
-          self.settings.audio[chord].play();
-          self.sendColorToDevice(color);
-          if (self.settings.showBackgroundColors) body.style.backgroundColor = color;
-          buttonTimeout = setTimeout(function () {
-            body.style.backgroundColor = defaultBackgroundColor;
-            self.sendColorToDevice('OFF');
-          }, 2000);
+          self.settings.audio[chord].play(); //self.sendColorToDevice(color);
         });
       });
     },
@@ -332,10 +340,9 @@ module.exports = function () {
       var condition, colorOutputMode;
       if (conditionButton) conditionButton.addEventListener('click', function (event) {
         condition = conditionElement.value;
-        colorOutputMode = colorOutputElement.value;
+        colorOutputMode = 'hud';
         if (condition === '') condition = conditions[utils.randomInt(0, 2)];
         self.settings.condition = condition;
-        self.settings.colorOutputMode = colorOutputMode;
 
         if (colorOutputMode === 'hud') {
           self.settings.showBackgroundColors = false;
