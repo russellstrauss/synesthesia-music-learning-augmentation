@@ -28,7 +28,7 @@
     "jshint": "^2.9.5",
     "jshint-stylish": "^2.2.1",
     "keypress": "^0.2.1",
-    "node-notifier": "^5.2.1",
+    "node-notifier": "^8.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {}
